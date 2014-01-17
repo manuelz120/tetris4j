@@ -1,4 +1,5 @@
-package tetris4j.core;
+package at.tetris4j.core;
+
 
 public class Main {
 
