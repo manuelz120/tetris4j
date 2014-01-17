@@ -3,7 +3,6 @@
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="D:/Studium/Projects/Tetris4J/tetris4j/libs/jansi-1.11.jar"/>
 	<classpathentry kind="lib" path="libs/junit/junit-4.11.jar" sourcepath="libs/junit/junit-4.11-sources.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="jar:platform:/resource/tetris4j/libs/junit/junit-4.11-javadoc.jar!/"/>
@@ -19,5 +18,6 @@
 	<classpathentry kind="lib" path="libs/logback/logback-classic-1.0.13.jar" sourcepath="libs/logback/logback-classic-1.0.13-sources.jar"/>
 	<classpathentry kind="lib" path="libs/logback/logback-core-1.0.13.jar" sourcepath="libs/logback/logback-core-1.0.13-sources.jar"/>
 	<classpathentry kind="lib" path="libs/logback/slf4j-api-1.7.5.jar" sourcepath="libs/logback/slf4j-api-1.7.5-sources.jar"/>
+	<classpathentry kind="lib" path="libs/jansi-1.11.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
