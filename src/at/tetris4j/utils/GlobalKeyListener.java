@@ -14,7 +14,8 @@ public class GlobalKeyListener implements NativeKeyListener {
 		this.view = view;
 	}
 	
-    public void nativeKeyPressed(NativeKeyEvent e) {
+    @Override
+	public void nativeKeyPressed(NativeKeyEvent e) {
             //System.out.println("Key Pressed: " + NativeKeyEvent.getKeyText(e.getKeyCode()));
 
             switch(e.getKeyCode()){
@@ -36,11 +37,13 @@ public class GlobalKeyListener implements NativeKeyListener {
             }
     }
 
-    public void nativeKeyReleased(NativeKeyEvent e) {
+    @Override
+	public void nativeKeyReleased(NativeKeyEvent e) {
             //System.out.println("Key Released: " + NativeKeyEvent.getKeyText(e.getKeyCode()));
     }
 
-    public void nativeKeyTyped(NativeKeyEvent e) {
+    @Override
+	public void nativeKeyTyped(NativeKeyEvent e) {
             //System.out.println("Key Typed: " + NativeKeyEvent.getKeyText(e.getKeyCode()));
     }
 }
