@@ -4,9 +4,9 @@ import org.fusesource.jansi.AnsiConsole;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
 
-import at.tetris4j.utils.GlobalKeyListener;
 import at.tetris4j.view.TetrisView;
 import at.tetris4j.view.View;
+import at.tetris4j.view.utils.GlobalKeyListener;
 
 public class Main {
 

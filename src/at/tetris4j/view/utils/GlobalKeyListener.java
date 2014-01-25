@@ -1,4 +1,4 @@
-package at.tetris4j.utils;
+package at.tetris4j.view.utils;
 
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.keyboard.NativeKeyEvent;

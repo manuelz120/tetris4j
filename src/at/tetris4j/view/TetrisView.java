@@ -27,8 +27,8 @@ public class TetrisView implements View {
 			AnsiConsole.out.println(AnsiCodes.ANSI_CLS);
 			AnsiConsole.out.println("--------------------------------------");
 			StringBuilder sb = new StringBuilder();
-			for (int i = 0; i < 30; i++) {
-				if (posY % 30 == i) {
+			for (int i = 0; i < 20; i++) {
+				if (posY % 20 == i) {
 					char[] chars = LINE.toCharArray();
 					for(int j = 0; j<chars.length; j++){
 						if(j==posX){
