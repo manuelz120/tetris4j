@@ -4,15 +4,8 @@ public interface View {
 
 	void render();
 	
-	@Deprecated
-	int getPosX();
+	void moveRight();
 	
-	@Deprecated
-	void setPosX(int x);
+	void moveLeft();
 	
-	@Deprecated
-	int getPosY();
-	
-	@Deprecated
-	void setPosY(int y);
 }

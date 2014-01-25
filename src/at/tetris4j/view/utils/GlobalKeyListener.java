@@ -14,23 +14,31 @@ public class GlobalKeyListener implements NativeKeyListener {
 		this.view = view;
 	}
 	
+	private long delta;
+	
     @Override
 	public void nativeKeyPressed(NativeKeyEvent e) {
-            //System.out.println("Key Pressed: " + NativeKeyEvent.getKeyText(e.getKeyCode()));
+//            System.out.println("Key Pressed: " + NativeKeyEvent.getKeyText(e.getKeyCode()));
 
+    		long now = System.currentTimeMillis();
+    		if (now - delta < 300)	{
+    			return;
+    		}
+    		
+    		delta = System.currentTimeMillis();
+    	
             switch(e.getKeyCode()){
             case NativeKeyEvent.VK_LEFT:
-            	view.setPosX(view.getPosX()-1);
+            	view.moveLeft();
             	break;
             case NativeKeyEvent.VK_RIGHT:
-            	view.setPosX(view.getPosX()+1);
+            	view.moveRight();
             	break;
             case NativeKeyEvent.VK_UP:
             	break;
             case NativeKeyEvent.VK_DOWN:
             	break;
             }
-            
             
             if (e.getKeyCode() == NativeKeyEvent.VK_ESCAPE) {
                     GlobalScreen.unregisterNativeHook();

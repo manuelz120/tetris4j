@@ -21,29 +21,40 @@ public class TetrisView implements View {
 		updateScreen();
 	}
 	
+	
 	private void updateScreen(){
 
+		
+		
+		String horLine = "--------------------------------------";
+		
+
 		while (true) {
-			AnsiConsole.out.println(AnsiCodes.ANSI_CLS);
-			AnsiConsole.out.println("--------------------------------------");
 			StringBuilder sb = new StringBuilder();
+			
+			sb.append(AnsiCodes.ANSI_CLS);
+			sb.append("\n");
+			sb.append(horLine);
+			sb.append("\n");
+			
 			for (int i = 0; i < 20; i++) {
 				if (posY % 20 == i) {
 					char[] chars = LINE.toCharArray();
-					for(int j = 0; j<chars.length; j++){
-						if(j==posX){
-							sb.append('X');
-						}else{
-							sb.append(chars[j]);
-						}
-					}
-					AnsiConsole.out.println(sb.toString());
+					chars[posX] = 'X';
+					sb.append(chars);
+					sb.append("\n");
 				} else {
-					AnsiConsole.out
-							.println(LINE);
+					sb.append(LINE);
+					sb.append("\n");
 				}
 			}
-			AnsiConsole.out.println("--------------------------------------");
+			sb.append(horLine);
+			sb.append("\n");
+			
+			
+			AnsiConsole.out.println(sb.toString());
+			
+			
 			posY++;
 			try {
 				Thread.sleep(500);
@@ -53,6 +64,16 @@ public class TetrisView implements View {
 		}
 	}
 
+	@Override
+	public void moveLeft() {
+		posX--;
+	}
+	
+	@Override
+	public void moveRight() {
+		posX++;
+	}
+	
 	public int getPosX() {
 		return posX;
 	}
