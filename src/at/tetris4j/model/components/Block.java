@@ -32,6 +32,16 @@ public class Block {
 		return this.presentation;
 	}
 
+	public int getWidth(){
+		int maxLength = 0;
+		for(String s : presentation){
+			if(maxLength < s.length()){
+				maxLength = s.length();
+			}
+		}
+		return maxLength;
+	}
+	
 	public int getX() {
 		return x;
 	}

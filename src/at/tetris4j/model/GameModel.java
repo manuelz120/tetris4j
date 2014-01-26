@@ -9,7 +9,7 @@ public class GameModel implements IModel {
 	private GameBoard gameBoard;
 	
 	public GameModel(){
-		this.gameBoard = new GameBoard(30, 50);
+		this.gameBoard = new GameBoard(30);
 	}
 	
 	@Override

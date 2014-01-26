@@ -20,17 +20,20 @@ public class GameBoard {
 	private ArrayList<String> gameBoard;
 	private ArrayList<Block> playedBlocks;
 
-	public GameBoard(int width, int height) {
-		this.width = width;
+	public GameBoard(int height) {
 		this.height = height;
 		currentBlock = new Block();
+		initializeGameBoard(height);
+		playedBlocks = new ArrayList<Block>();
+	}
+
+	private void initializeGameBoard(int height) {
 		gameBoard = new ArrayList<String>();
 		gameBoard.add(HORLINE);
 		for (int i = 0; i < height; i++) {
 			gameBoard.add(LINE);
 		}
 		gameBoard.add(HORLINE);
-		playedBlocks = new ArrayList<Block>();
 	}
 
 	/**
@@ -53,28 +56,34 @@ public class GameBoard {
 	 *         otherwise false.
 	 */
 	private boolean canCurrentBlockMove(TetrisKey direction) {
-		// TODO: Check whether a specific block can move.
 		switch (direction) {
 		case DOWN:
 			if (currentBlock.getY() < this.height) {
-				String lastLine = currentBlock.getPresentation()[currentBlock
-						.getPresentation().length - 1];
-				String lineBelowLastLine = gameBoard
-						.get(currentBlock.getY() + currentBlock.getPresentation().length +1);
-				for (int i = 0; i < lastLine.length(); i++) {
-					if (lineBelowLastLine.charAt(currentBlock.getX() + i) == '#'
-							|| lineBelowLastLine
-									.charAt(currentBlock.getX() + i) == '-') {
-						return false;
-					}
+				int start = currentBlock.getX();
+				int end = currentBlock.getWidth() + currentBlock.getX();
+				String lineBelowLastLine = gameBoard.get(
+						currentBlock.getY()
+								+ currentBlock.getPresentation().length + 1)
+						.substring(start, end);
+				if (lineBelowLastLine.contains("#")
+						|| lineBelowLastLine.contains("-")) {
+					playedBlocks.add(currentBlock);
+					currentBlock = new Block();
+					return false;
 				}
 				return true;
 			}
 			return false;
 		case LEFT:
-			break;
+			if (currentBlock.getX() - 1 > 0) {
+				return true;
+			}
+			return false;
 		case RIGHT:
-			break;
+			if (currentBlock.getX() + currentBlock.getWidth() < LINE.length() - 1) {
+				return true;
+			}
+			return false;
 		default:
 			break;
 		}
@@ -97,18 +106,20 @@ public class GameBoard {
 	 *            block should be moved. Possible Inputs: LEFT;RIGHT;DOWN;
 	 */
 	public void moveCurrentBlock(TetrisKey direction) {
-		switch (direction) {
-		case DOWN:
-			currentBlock.setY(currentBlock.getY() + 1);
-			break;
-		case LEFT:
-			currentBlock.setX(currentBlock.getX() - 1);
-			break;
-		case RIGHT:
-			currentBlock.setX(currentBlock.getX() + 1);
-			break;
-		default:
-			break;
+		if (canCurrentBlockMove(direction)) {
+			switch (direction) {
+			case DOWN:
+				currentBlock.setY(currentBlock.getY() + 1);
+				break;
+			case LEFT:
+				currentBlock.setX(currentBlock.getX() - 1);
+				break;
+			case RIGHT:
+				currentBlock.setX(currentBlock.getX() + 1);
+				break;
+			default:
+				break;
+			}
 		}
 	}
 
@@ -125,12 +136,7 @@ public class GameBoard {
 	 * Update the position of the current block.
 	 */
 	private void updateCurrentBlockPosition() {
-		if (canCurrentBlockMove(TetrisKey.DOWN)) {
-			moveCurrentBlock(TetrisKey.DOWN);
-		} else {
-			playedBlocks.add(currentBlock);
-			currentBlock = new Block();
-		}
+		moveCurrentBlock(TetrisKey.DOWN);
 	}
 
 	/**
@@ -139,7 +145,6 @@ public class GameBoard {
 	 * @return The current BoardPresentation
 	 */
 	public BoardPresentation getGameBoard() {
-		// TODO: Return correct BoardPresentation.
 		gameBoard.clear();
 
 		StringBuilder sb = new StringBuilder();
@@ -164,16 +169,16 @@ public class GameBoard {
 		}
 		gameBoard.add(HORLINE);
 
-		// for (Block b : playedBlocks) {
-		// String[] presentation = b.getPresentation();
-		// for (int j = 0; j < presentation.length; j++) {
-		// char[] chars = gameBoard.get(b.getY()+j).toCharArray();
-		// for (int k = 0; k < presentation[j].length(); k++) {
-		// chars[b.getX() + k] = presentation[j].charAt(k);
-		// }
-		// gameBoard.set(b.getX(), String.valueOf(chars));
-		// }
-		// }
+		for (Block b : playedBlocks) {
+			String[] presentation = b.getPresentation();
+			for (int j = 0; j < presentation.length; j++) {
+				char[] chars = gameBoard.get(b.getY() + j).toCharArray();
+				for (int k = 0; k < presentation[j].length(); k++) {
+					chars[b.getX() + k] = presentation[j].charAt(k);
+				}
+				gameBoard.set(b.getY() + j + 1, String.valueOf(chars));
+			}
+		}
 
 		for (String s : gameBoard) {
 			sb.append(s);
@@ -182,6 +187,7 @@ public class GameBoard {
 
 		updateCurrentBlockPosition();
 		removeFilledRows();
+
 		return new BoardPresentation(sb.toString());
 	}
 

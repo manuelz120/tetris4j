@@ -27,7 +27,7 @@ public class GameController implements IController{
 
 	@Override
 	public void downPressed() {
-		model.moveDown();		
+		//model.moveDown();		
 	}
 
 	@Override
