@@ -5,7 +5,7 @@ import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
 
 import at.tetris4j.view.TetrisView;
-import at.tetris4j.view.View;
+import at.tetris4j.view.IView;
 import at.tetris4j.view.utils.GlobalKeyListener;
 
 public class Main {
@@ -21,7 +21,7 @@ public class Main {
 			System.exit(1);
 		}
 		
-		View view  = new TetrisView();
+		IView view  = new TetrisView();
 
 		// Construct the example object and initialize native hook.
 		GlobalScreen.getInstance()

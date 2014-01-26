@@ -3,9 +3,11 @@ package at.tetris4j.view;
 import org.fusesource.jansi.AnsiConsole;
 
 import at.tetris4j.resources.AnsiCodes;
+import at.tetris4j.view.utils.TetrisKey;
 
-public class TetrisView implements View {
+public class TetrisView implements IView {
 	
+	private static final int _GAMEHEIGHT = 30;
 	private static final String LINE = "|                                    |";
 	private int posX;
 	private int posY;
@@ -21,13 +23,14 @@ public class TetrisView implements View {
 		updateScreen();
 	}
 	
+	@Override
+	public void KeyPressed(TetrisKey key) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	private void updateScreen(){
-
-		
-		
 		String horLine = "--------------------------------------";
-		
 
 		while (true) {
 			StringBuilder sb = new StringBuilder();
@@ -37,8 +40,8 @@ public class TetrisView implements View {
 			sb.append(horLine);
 			sb.append("\n");
 			
-			for (int i = 0; i < 20; i++) {
-				if (posY % 20 == i) {
+			for (int i = 0; i < _GAMEHEIGHT; i++) {
+				if (posY % _GAMEHEIGHT == i) {
 					char[] chars = LINE.toCharArray();
 					chars[posX] = 'X';
 					sb.append(chars);
@@ -51,9 +54,7 @@ public class TetrisView implements View {
 			sb.append(horLine);
 			sb.append("\n");
 			
-			
 			AnsiConsole.out.println(sb.toString());
-			
 			
 			posY++;
 			try {

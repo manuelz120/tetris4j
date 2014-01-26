@@ -4,13 +4,13 @@ import org.jnativehook.GlobalScreen;
 import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
 
-import at.tetris4j.view.View;
+import at.tetris4j.view.IView;
 
 public class GlobalKeyListener implements NativeKeyListener {
 	
-	private View view;
+	private IView view;
 	
-	public GlobalKeyListener(View view){
+	public GlobalKeyListener(IView view){
 		this.view = view;
 	}
 	
