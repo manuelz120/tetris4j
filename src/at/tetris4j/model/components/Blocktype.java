@@ -1,5 +1,7 @@
 package at.tetris4j.model.components;
 
+import java.util.Random;
+
 /**
  * Enum to define the different forms of Tetris-Blocks.
  * @author Manuel Zametter
@@ -13,6 +15,8 @@ public enum Blocktype {
 	S,
 	T,
 	Z;
+	
+	private static Random random = new Random();
 	
 	/**
 	 * Method to get the basic presentation form of a Tetris-Block.
@@ -49,6 +53,27 @@ public enum Blocktype {
 		case Z:
 			return new String[]{"##",
 								" ##"};
+		default:
+			return null;
+		}
+	}
+	
+	public static Blocktype getRandomBlockType(){
+		switch(random.nextInt(7)){
+		case 0:
+			return I;
+		case 1:
+			return J;
+		case 2:
+			return L;
+		case 3:
+			return O;
+		case 4:
+			return S;
+		case 5:
+			return T;
+		case 6:
+			return Z;
 		default:
 			return null;
 		}

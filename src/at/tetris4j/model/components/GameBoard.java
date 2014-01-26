@@ -1,7 +1,5 @@
 package at.tetris4j.model.components;
 
-import java.util.ArrayList;
-
 import at.tetris4j.resources.AnsiCodes;
 import at.tetris4j.view.utils.TetrisKey;
 
@@ -15,19 +13,12 @@ public class GameBoard {
 	private static final String HORLINE = "--------------------------------------";
 	private int width;
 	private int height;
-	private ArrayList<Block> blockList;
 	private Block currentBlock;
-	
-	private int posX;
-	private int posY;
 	
 	public GameBoard(int width, int height){
 		this.width = width;
 		this.height = height;
-		this.blockList = new ArrayList<Block>();
-		
-		posX = 5;
-		posY = 0;
+		currentBlock = new Block();		
 	}
 	
 	/**
@@ -107,6 +98,9 @@ public class GameBoard {
 	 * Update the position of the Blocks.
 	 */
 	private void updateBlockPositions(){
+		if(canCurrentBlockMove(TetrisKey.DOWN)){
+			
+		}
 		//TODO: Update Block Positions.
 	}
 	
@@ -128,11 +122,16 @@ public class GameBoard {
 		sb.append("\n");
 		
 		for (int i = 0; i < height; i++) {
-			if (posY % height == i) {
-				char[] chars = LINE.toCharArray();
-				chars[posX] = 'X';
-				sb.append(chars);
-				sb.append("\n");
+			if (currentBlock.getY() == i) {
+				String[] presentation = currentBlock.getPresentation();
+				for(int j = 0; j<presentation.length; j++){
+					char[] chars = LINE.toCharArray();
+					for(int k = 0; k<presentation[j].length(); k++){
+						chars[currentBlock.getX()+k] = presentation[j].charAt(k);
+					}
+					sb.append(chars);
+					sb.append("\n");
+				}
 			} else {
 				sb.append(LINE);
 				sb.append("\n");
@@ -140,7 +139,7 @@ public class GameBoard {
 		}
 		sb.append(HORLINE);
 		sb.append("\n");
-		posY++;
+		moveCurrentBlock(TetrisKey.DOWN);
 		return new BoardPresentation(sb.toString());
 	}
 
@@ -150,9 +149,5 @@ public class GameBoard {
 
 	public int getHeight() {
 		return height;
-	}
-
-	public ArrayList<Block> getBlockList() {
-		return blockList;
 	}
 }

@@ -7,15 +7,21 @@ import java.awt.Color;
  * @author Manuel Zametter
  *
  */
-public class Block {
+public class Block {	
 	private int x;
 	private int y;
 	private Color color;
 	private Blocktype blocktype;
 	private String[] presentation;
 	
+	/**
+	 * Initializes a random tetris-block.
+	 */
 	public Block(){
-		//TODO: Initialize a random block;
+		blocktype = Blocktype.getRandomBlockType();
+		presentation = blocktype.getBasicBlock();
+		color = Color.RED;
+		x = 5;
 	}
 	
 	public void turn(){
