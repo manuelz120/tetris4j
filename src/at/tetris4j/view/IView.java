@@ -6,10 +6,5 @@ public interface IView {
 
 	void render();
 	
-	void moveRight();
-	
-	void moveLeft();
-	
 	void KeyPressed(TetrisKey key);
-	
 }

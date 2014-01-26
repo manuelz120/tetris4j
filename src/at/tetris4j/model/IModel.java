@@ -10,6 +10,8 @@ public interface IModel {
 	
 	public void moveRight();
 	
+	public void moveDown();
+	
 	public void turn();
 	
 	public void pause();

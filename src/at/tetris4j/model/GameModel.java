@@ -1,12 +1,19 @@
 package at.tetris4j.model;
 
 import at.tetris4j.model.components.BoardPresentation;
+import at.tetris4j.model.components.GameBoard;
 
 public class GameModel implements IModel {
 
+	private GameBoard gameBoard;
+	
+	public GameModel(){
+		this.gameBoard = new GameBoard(30, 50);
+	}
+	
 	@Override
 	public BoardPresentation getGameBoard() {
-		return null;
+		return this.gameBoard.getGameBoard();
 	}
 
 	@Override
@@ -31,6 +38,11 @@ public class GameModel implements IModel {
 
 	@Override
 	public void stop() {
+	}
+
+	@Override
+	public void moveDown() {
+		
 	}
 
 }

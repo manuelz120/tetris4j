@@ -2,22 +2,32 @@ package at.tetris4j.model.components;
 
 import java.util.ArrayList;
 
+import at.tetris4j.resources.AnsiCodes;
+
 /**
  * Class representing a simple Tetris-GameBoard.
  * @author Manuel Zametter
  *
  */
 public class GameBoard {
+	private static final String LINE = "|                                    |";
+	private static final String HORLINE = "--------------------------------------";
 	private int width;
 	private int height;
 	private ArrayList<Block> blockList;
 	private String[] gameBoard;
+	
+	private int posX;
+	private int posY;
 	
 	public GameBoard(int width, int height){
 		this.width = width;
 		this.height = height;
 		this.blockList = new ArrayList<Block>();
 		this.gameBoard = new String[height];
+		
+		posX = 5;
+		posY = 0;
 	}
 	
 	/**
@@ -63,9 +73,30 @@ public class GameBoard {
 	 * @return
 	 * The current BoardPresentation
 	 */
-	private BoardPresentation getGameBoard(){
+	public BoardPresentation getGameBoard(){
 		//TODO: Return correct BoardPresentation.
-		return new BoardPresentation();
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(AnsiCodes.ANSI_CLS);
+		sb.append("\n");
+		sb.append(HORLINE);
+		sb.append("\n");
+		
+		for (int i = 0; i < height; i++) {
+			if (posY % height == i) {
+				char[] chars = LINE.toCharArray();
+				chars[posX] = 'X';
+				sb.append(chars);
+				sb.append("\n");
+			} else {
+				sb.append(LINE);
+				sb.append("\n");
+			}
+		}
+		sb.append(HORLINE);
+		sb.append("\n");
+		posY++;
+		return new BoardPresentation(sb.toString());
 	}
 
 	public int getWidth() {

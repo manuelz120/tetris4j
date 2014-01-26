@@ -1,21 +1,24 @@
 package at.tetris4j.view;
 
+import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
+import org.fusesource.jansi.Ansi.Erase;
 
-import at.tetris4j.resources.AnsiCodes;
+import at.tetris4j.controller.IController;
+import at.tetris4j.model.IModel;
+import at.tetris4j.model.components.BoardPresentation;
 import at.tetris4j.view.utils.TetrisKey;
 
 public class TetrisView implements IView {
 	
-	private static final int _GAMEHEIGHT = 30;
-	private static final String LINE = "|                                    |";
-	private int posX;
-	private int posY;
+	private IController controller;
+	private IModel model;
+	private BoardPresentation boardPresentation;
 	
 
-	public TetrisView(){
-		posX = 5;
-		posY = 0;
+	public TetrisView(IController controller, IModel model){
+		this.controller = controller;
+		this.model = model;
 	}
 	
 	@Override
@@ -25,38 +28,50 @@ public class TetrisView implements IView {
 	
 	@Override
 	public void KeyPressed(TetrisKey key) {
-		// TODO Auto-generated method stub
-		
+		switch (key){
+		case UP:
+			controller.upPressed();
+			break;
+		case DOWN:
+			controller.downPressed();
+			break;
+		case LEFT:
+			controller.leftPressed();
+			break;
+		case RIGHT:
+			controller.rightPressed();
+			break;
+		case W:
+			controller.wPressed();
+			break;
+		case A:
+			controller.aPressed();
+			break;
+		case S:
+			controller.sPressed();
+			break;
+		case D:
+			controller.dPressed();
+			break;
+		case PAUSE:
+			controller.pausePressed();
+			break;
+		case RESUME:
+			controller.resumePressed();
+			break;
+		case STOP:
+			controller.stopPressed();
+			break;
+		default:
+			break;
+		}
 	}
 	
 	private void updateScreen(){
-		String horLine = "--------------------------------------";
-
 		while (true) {
-			StringBuilder sb = new StringBuilder();
-			
-			sb.append(AnsiCodes.ANSI_CLS);
-			sb.append("\n");
-			sb.append(horLine);
-			sb.append("\n");
-			
-			for (int i = 0; i < _GAMEHEIGHT; i++) {
-				if (posY % _GAMEHEIGHT == i) {
-					char[] chars = LINE.toCharArray();
-					chars[posX] = 'X';
-					sb.append(chars);
-					sb.append("\n");
-				} else {
-					sb.append(LINE);
-					sb.append("\n");
-				}
-			}
-			sb.append(horLine);
-			sb.append("\n");
-			
-			AnsiConsole.out.println(sb.toString());
-			
-			posY++;
+			AnsiConsole.out.print(Ansi.ansi().eraseScreen());			
+			boardPresentation = model.getGameBoard();
+			AnsiConsole.out.print(boardPresentation.getOutput());
 			try {
 				Thread.sleep(500);
 			} catch (InterruptedException e) {
@@ -64,31 +79,4 @@ public class TetrisView implements IView {
 			}
 		}
 	}
-
-	@Override
-	public void moveLeft() {
-		posX--;
-	}
-	
-	@Override
-	public void moveRight() {
-		posX++;
-	}
-	
-	public int getPosX() {
-		return posX;
-	}
-
-	public void setPosX(int posX) {
-		this.posX = posX;
-	}
-
-	public int getPosY() {
-		return posY;
-	}
-
-	public void setPosY(int posY) {
-		this.posY = posY;
-	}
-	
 }

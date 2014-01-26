@@ -18,8 +18,6 @@ public class GlobalKeyListener implements NativeKeyListener {
 	
     @Override
 	public void nativeKeyPressed(NativeKeyEvent e) {
-//            System.out.println("Key Pressed: " + NativeKeyEvent.getKeyText(e.getKeyCode()));
-
     		long now = System.currentTimeMillis();
     		if (now - delta < 300)	{
     			return;
@@ -29,14 +27,16 @@ public class GlobalKeyListener implements NativeKeyListener {
     	
             switch(e.getKeyCode()){
             case NativeKeyEvent.VK_LEFT:
-            	view.moveLeft();
+            	view.KeyPressed(TetrisKey.LEFT);
             	break;
             case NativeKeyEvent.VK_RIGHT:
-            	view.moveRight();
+            	view.KeyPressed(TetrisKey.RIGHT);
             	break;
             case NativeKeyEvent.VK_UP:
+            	view.KeyPressed(TetrisKey.UP);
             	break;
             case NativeKeyEvent.VK_DOWN:
+            	view.KeyPressed(TetrisKey.DOWN);
             	break;
             }
             
