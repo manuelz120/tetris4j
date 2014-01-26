@@ -2,7 +2,6 @@ package at.tetris4j.view;
 
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
-import org.fusesource.jansi.Ansi.Erase;
 
 import at.tetris4j.controller.IController;
 import at.tetris4j.model.IModel;

@@ -2,6 +2,7 @@ package at.tetris4j.model;
 
 import at.tetris4j.model.components.BoardPresentation;
 import at.tetris4j.model.components.GameBoard;
+import at.tetris4j.view.utils.TetrisKey;
 
 public class GameModel implements IModel {
 
@@ -18,14 +19,17 @@ public class GameModel implements IModel {
 
 	@Override
 	public void moveLeft() {
+		gameBoard.moveCurrentBlock(TetrisKey.LEFT);
 	}
 
 	@Override
 	public void moveRight() {
+		gameBoard.moveCurrentBlock(TetrisKey.RIGHT);
 	}
 
 	@Override
 	public void turn() {
+		gameBoard.turnCurrentBlock();
 	}
 
 	@Override
@@ -42,7 +46,7 @@ public class GameModel implements IModel {
 
 	@Override
 	public void moveDown() {
-		
+		gameBoard.moveCurrentBlock(TetrisKey.DOWN);
 	}
 
 }
