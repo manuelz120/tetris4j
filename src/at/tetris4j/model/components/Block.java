@@ -21,7 +21,7 @@ public class Block {
 		blocktype = Blocktype.getRandomBlockType();
 		presentation = blocktype.getBasicBlock();
 		color = Color.RED;
-		x = 5;
+		x = ((int)(Math.random()*10))+1;
 	}
 	
 	public void turn(){

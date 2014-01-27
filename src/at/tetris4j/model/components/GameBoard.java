@@ -18,13 +18,13 @@ public class GameBoard {
 	private int height;
 	private Block currentBlock;
 	private ArrayList<String> gameBoard;
-	private ArrayList<Block> playedBlocks;
+	private ArrayList<String> oldBoard;
 
 	public GameBoard(int height) {
+		oldBoard = new ArrayList<String>();
 		this.height = height;
 		currentBlock = new Block();
 		initializeGameBoard(height);
-		playedBlocks = new ArrayList<Block>();
 	}
 
 	private void initializeGameBoard(int height) {
@@ -34,6 +34,7 @@ public class GameBoard {
 			gameBoard.add(LINE);
 		}
 		gameBoard.add(HORLINE);
+		oldBoard = new ArrayList<String>(gameBoard);
 	}
 
 	/**
@@ -67,8 +68,8 @@ public class GameBoard {
 						.substring(start, end);
 				if (lineBelowLastLine.contains("#")
 						|| lineBelowLastLine.contains("-")) {
-					playedBlocks.add(currentBlock);
 					currentBlock = new Block();
+					oldBoard = new ArrayList<String>(gameBoard);
 					return false;
 				}
 				return true;
@@ -145,48 +146,30 @@ public class GameBoard {
 	 * @return The current BoardPresentation
 	 */
 	public BoardPresentation getGameBoard() {
+		updateCurrentBlockPosition();
+		removeFilledRows();
+		
 		gameBoard.clear();
 
 		StringBuilder sb = new StringBuilder();
 		sb.append(AnsiCodes.ANSI_CLS);
-		gameBoard.add(HORLINE);
+		gameBoard = new ArrayList<String>(oldBoard);
+		String[] presentation = currentBlock.getPresentation();
+		
+		for (int j = 0; j < presentation.length; j++) {
+			char[] chars = oldBoard.get(currentBlock.getY()+1).toCharArray();
 
-		for (int i = 0; i < height; i++) {
-			if (currentBlock.getY() == i) {
-				String[] presentation = currentBlock.getPresentation();
-				for (int j = 0; j < presentation.length; j++) {
-					char[] chars = LINE.toCharArray();
-					for (int k = 0; k < presentation[j].length(); k++) {
-						chars[currentBlock.getX() + k] = presentation[j]
-								.charAt(k);
-					}
-					gameBoard.add(String.valueOf(chars));
-					i++;
-				}
-			} else {
-				gameBoard.add(LINE);
+			for (int k = 0; k < presentation[j].length(); k++) {
+				chars[currentBlock.getX() + k] = presentation[j]
+						.charAt(k);
 			}
-		}
-		gameBoard.add(HORLINE);
-
-		for (Block b : playedBlocks) {
-			String[] presentation = b.getPresentation();
-			for (int j = 0; j < presentation.length; j++) {
-				char[] chars = gameBoard.get(b.getY() + j).toCharArray();
-				for (int k = 0; k < presentation[j].length(); k++) {
-					chars[b.getX() + k] = presentation[j].charAt(k);
-				}
-				gameBoard.set(b.getY() + j + 1, String.valueOf(chars));
-			}
+			gameBoard.set(currentBlock.getY()+1+j,String.valueOf(chars));
 		}
 
 		for (String s : gameBoard) {
 			sb.append(s);
 			sb.append("\n");
 		}
-
-		updateCurrentBlockPosition();
-		removeFilledRows();
 
 		return new BoardPresentation(sb.toString());
 	}
