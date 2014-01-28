@@ -14,6 +14,7 @@ import at.tetris4j.view.utils.TetrisKey;
  * 
  */
 public class GameBoard {
+	private static final int REFRESH_RATE = 500;
 	private static final String LINE = "|                                    |";
 	private static final String HORLINE = "--------------------------------------";
 	private int width;
@@ -35,7 +36,7 @@ public class GameBoard {
 				  updateCurrentBlockPosition();
 				  removeFilledRows();
 			  }
-			}, 500, 500);
+			}, REFRESH_RATE, REFRESH_RATE);
 	}
 
 	private void initializeGameBoard(int height) {
