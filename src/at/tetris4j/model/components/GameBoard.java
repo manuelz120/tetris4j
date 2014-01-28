@@ -1,6 +1,8 @@
 package at.tetris4j.model.components;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import at.tetris4j.resources.AnsiCodes;
 import at.tetris4j.view.utils.TetrisKey;
@@ -19,12 +21,21 @@ public class GameBoard {
 	private Block currentBlock;
 	private ArrayList<String> gameBoard;
 	private ArrayList<String> oldBoard;
+	private Timer updateTimer;
 
 	public GameBoard(int height) {
 		oldBoard = new ArrayList<String>();
 		this.height = height;
 		currentBlock = new Block();
 		initializeGameBoard(height);
+		updateTimer = new Timer();
+		updateTimer.scheduleAtFixedRate(new TimerTask() {
+			  @Override
+			  public void run() {
+				  updateCurrentBlockPosition();
+				  removeFilledRows();
+			  }
+			}, 500, 500);
 	}
 
 	private void initializeGameBoard(int height) {
@@ -145,10 +156,7 @@ public class GameBoard {
 	 * 
 	 * @return The current BoardPresentation
 	 */
-	public BoardPresentation getGameBoard() {
-		updateCurrentBlockPosition();
-		removeFilledRows();
-		
+	public BoardPresentation getGameBoard() {		
 		gameBoard.clear();
 
 		StringBuilder sb = new StringBuilder();
@@ -165,12 +173,12 @@ public class GameBoard {
 			}
 			gameBoard.set(currentBlock.getY()+1+j,String.valueOf(chars));
 		}
-
+		
 		for (String s : gameBoard) {
 			sb.append(s);
 			sb.append("\n");
 		}
-
+		
 		return new BoardPresentation(sb.toString());
 	}
 
