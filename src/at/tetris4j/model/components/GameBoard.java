@@ -78,17 +78,19 @@ public class GameBoard {
 		switch (direction) {
 		case DOWN:
 			if (currentBlock.getY() < this.height) {
-				int start = currentBlock.getX();
-				int end = currentBlock.getWidth() + currentBlock.getX();
-				String lineBelowLastLine = gameBoard.get(
-						currentBlock.getY()
-								+ currentBlock.getPresentation().length + 1)
-						.substring(start, end);
-				if (lineBelowLastLine.contains("#")
-						|| lineBelowLastLine.contains("-")) {
-					currentBlock = new Block();
-					oldBoard = new ArrayList<String>(gameBoard);
-					return false;
+				String[] presentation = currentBlock.getPresentation();
+				for (int i = 0; i < presentation.length; i++) {
+					String currentLine = currentBlock.getPresentation()[i];
+					int start = currentBlock.getX()+currentLine.indexOf("#");
+					int end = currentBlock.getX()+currentLine.lastIndexOf("#")+1;
+					String lineBelowCurrentLine = oldBoard.get(
+							currentBlock.getY() + i + 2).substring(start, end);
+					if (lineBelowCurrentLine.contains("#")
+							|| lineBelowCurrentLine.contains("-")) {
+						currentBlock = new Block();
+						oldBoard = new ArrayList<String>(gameBoard);
+						return false;
+					}
 				}
 				return true;
 			}
@@ -114,7 +116,13 @@ public class GameBoard {
 	 * Remove filled Rows from the GameBoard.
 	 */
 	private void removeFilledRows() {
-		// TODO: Search filled rows and remove them.
+		// TODO: Test it!
+		for (int i = 1; i < height + 1; i++) {
+			if (!oldBoard.get(i).contains(" ") && oldBoard.get(i).contains("|")) {
+				oldBoard.remove(i);
+				oldBoard.add(1, LINE);
+			}
+		}
 	}
 
 	/**
@@ -177,7 +185,8 @@ public class GameBoard {
 		String[] presentation = currentBlock.getPresentation();
 
 		for (int j = 0; j < presentation.length; j++) {
-			char[] chars = oldBoard.get(currentBlock.getY() + 1 +j).toCharArray();
+			char[] chars = oldBoard.get(currentBlock.getY() + 1 + j)
+					.toCharArray();
 
 			for (int k = 0; k < presentation[j].length(); k++) {
 				chars[currentBlock.getX() + k] = presentation[j].charAt(k);
