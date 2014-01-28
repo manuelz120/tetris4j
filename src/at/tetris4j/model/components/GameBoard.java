@@ -23,20 +23,25 @@ public class GameBoard {
 	private ArrayList<String> gameBoard;
 	private ArrayList<String> oldBoard;
 	private Timer updateTimer;
+	private BoardPresentation boardPresentation;
 
 	public GameBoard(int height) {
 		oldBoard = new ArrayList<String>();
 		this.height = height;
 		currentBlock = new Block();
 		initializeGameBoard(height);
+		initializeUpdateTimer();
+	}
+
+	private void initializeUpdateTimer() {
 		updateTimer = new Timer();
 		updateTimer.scheduleAtFixedRate(new TimerTask() {
-			  @Override
-			  public void run() {
-				  updateCurrentBlockPosition();
-				  removeFilledRows();
-			  }
-			}, REFRESH_RATE, REFRESH_RATE);
+			@Override
+			public void run() {
+				updateCurrentBlockPosition();
+				removeFilledRows();
+			}
+		}, REFRESH_RATE, REFRESH_RATE);
 	}
 
 	private void initializeGameBoard(int height) {
@@ -47,6 +52,7 @@ public class GameBoard {
 		}
 		gameBoard.add(HORLINE);
 		oldBoard = new ArrayList<String>(gameBoard);
+		updateBoardPresentation();
 	}
 
 	/**
@@ -134,6 +140,7 @@ public class GameBoard {
 				break;
 			}
 		}
+		updateBoardPresentation();
 	}
 
 	/**
@@ -157,30 +164,33 @@ public class GameBoard {
 	 * 
 	 * @return The current BoardPresentation
 	 */
-	public BoardPresentation getGameBoard() {		
+	public BoardPresentation getBoardPresentation() {
+		return this.boardPresentation;
+	}
+
+	private void updateBoardPresentation() {
 		gameBoard.clear();
 
 		StringBuilder sb = new StringBuilder();
 		sb.append(AnsiCodes.ANSI_CLS);
 		gameBoard = new ArrayList<String>(oldBoard);
 		String[] presentation = currentBlock.getPresentation();
-		
+
 		for (int j = 0; j < presentation.length; j++) {
-			char[] chars = oldBoard.get(currentBlock.getY()+1).toCharArray();
+			char[] chars = oldBoard.get(currentBlock.getY() + 1 +j).toCharArray();
 
 			for (int k = 0; k < presentation[j].length(); k++) {
-				chars[currentBlock.getX() + k] = presentation[j]
-						.charAt(k);
+				chars[currentBlock.getX() + k] = presentation[j].charAt(k);
 			}
-			gameBoard.set(currentBlock.getY()+1+j,String.valueOf(chars));
+			gameBoard.set(currentBlock.getY() + 1 + j, String.valueOf(chars));
 		}
-		
+
 		for (String s : gameBoard) {
 			sb.append(s);
 			sb.append("\n");
 		}
-		
-		return new BoardPresentation(sb.toString());
+
+		this.boardPresentation = new BoardPresentation(sb.toString());
 	}
 
 	public int getWidth() {

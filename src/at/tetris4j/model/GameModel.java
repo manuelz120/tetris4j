@@ -14,7 +14,7 @@ public class GameModel implements IModel {
 	
 	@Override
 	public BoardPresentation getGameBoard() {
-		return this.gameBoard.getGameBoard();
+		return this.gameBoard.getBoardPresentation();
 	}
 
 	@Override
