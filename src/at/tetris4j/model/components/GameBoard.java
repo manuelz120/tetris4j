@@ -12,8 +12,8 @@ import at.tetris4j.view.utils.TetrisKey;
  */
 public class GameBoard {
 	
-	private static final String LINE = "|                                    |";
-	private static final String HORLINE = "--------------------------------------";
+	private static final String LINE =    "|                   |";
+	private static final String HORLINE = "---------------------";
 	private int width;
 	private int height;
 	private Block currentBlock;
@@ -146,6 +146,8 @@ public class GameBoard {
 	public void turnCurrentBlock() {
 		if (canCurrentBlockTurn()) {
 			// TODO: Turn the current block;
+			currentBlock.turn();
+			updateBoardPresentation();
 		}
 	}
 
@@ -178,7 +180,9 @@ public class GameBoard {
 			char[] chars = oldBoard.get(currentBlock.getY() + 1 + j).toCharArray();
 
 			for (int k = 0; k < presentation[j].length(); k++) {
-				chars[currentBlock.getX() + k] = presentation[j].charAt(k);
+				if(presentation[j].charAt(k)  == '#'){
+					chars[currentBlock.getX() + k] = presentation[j].charAt(k);					
+				}
 			}
 			gameBoard.set(currentBlock.getY() + 1 + j, String.valueOf(chars));
 		}
