@@ -1,10 +1,11 @@
 package at.tetris4j.view;
 
-import at.tetris4j.view.utils.TetrisKey;
+import at.tetris4j.model.IModel;
+
 
 public interface IView {
 
-	void render();
+	void updateScreen(IModel model);
 	
-	void KeyPressed(TetrisKey key);
+	void showStartScreen();
 }

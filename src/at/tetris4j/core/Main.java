@@ -8,13 +8,22 @@ import at.tetris4j.controller.GameController;
 import at.tetris4j.controller.IController;
 import at.tetris4j.model.GameModel;
 import at.tetris4j.model.IModel;
-import at.tetris4j.view.IView;
-import at.tetris4j.view.TetrisView;
-import at.tetris4j.view.utils.GlobalKeyListener;
 
 public class Main {
 
 	public static void main(String[] args) {
+		initializeGame();
+		
+		IModel model = new GameModel();
+		IController controller = new GameController(model);
+		
+		// start game
+		controller.startGame();
+
+	}
+
+	private static void initializeGame() {
+
 		AnsiConsole.systemInstall();
 		
 		try {
@@ -25,14 +34,19 @@ public class Main {
 
 			System.exit(1);
 		}
-		IModel model = new GameModel();
-		IController controller = new GameController(model);
-		IView view  = new TetrisView(controller, model);
 
-		// Construct the example object and initialize native hook.
-		GlobalScreen.getInstance()
-				.addNativeKeyListener(new GlobalKeyListener(view));		
-		view.render();
-
+		// registers a shutdown hook
+		// this shutdown hook is called before the jvm is shutdown and releases the dependencies
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
+			public void run() {
+				GlobalScreen.unregisterNativeHook();
+				System.out.println("unregister native hook");
+				AnsiConsole.systemUninstall();
+				System.out.println("unistall ansi console");
+				// network can be closed here
+			}
+		});
 	}
+	
 }

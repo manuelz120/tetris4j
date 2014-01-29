@@ -4,6 +4,8 @@ import at.tetris4j.model.components.BoardPresentation;
 
 public interface IModel {
 	
+	void updateGame();
+	
 	public BoardPresentation getGameBoard();
 	
 	public void moveLeft();

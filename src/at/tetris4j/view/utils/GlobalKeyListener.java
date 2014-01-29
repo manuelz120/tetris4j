@@ -1,16 +1,15 @@
 package at.tetris4j.view.utils;
 
-import org.jnativehook.GlobalScreen;
 import org.jnativehook.keyboard.NativeKeyEvent;
 import org.jnativehook.keyboard.NativeKeyListener;
 
-import at.tetris4j.view.IView;
+import at.tetris4j.view.IConsoleView;
 
 public class GlobalKeyListener implements NativeKeyListener {
 	
-	private IView view;
+	private IConsoleView view;
 	
-	public GlobalKeyListener(IView view){
+	public GlobalKeyListener(IConsoleView view){
 		this.view = view;
 	}
 	
@@ -27,31 +26,26 @@ public class GlobalKeyListener implements NativeKeyListener {
     	
             switch(e.getKeyCode()){
             case NativeKeyEvent.VK_LEFT:
-            	view.KeyPressed(TetrisKey.LEFT);
+            	view.keyPressed(TetrisKey.LEFT);
             	break;
             case NativeKeyEvent.VK_RIGHT:
-            	view.KeyPressed(TetrisKey.RIGHT);
+            	view.keyPressed(TetrisKey.RIGHT);
             	break;
             case NativeKeyEvent.VK_UP:
-            	view.KeyPressed(TetrisKey.UP);
+            	view.keyPressed(TetrisKey.UP);
             	break;
             case NativeKeyEvent.VK_DOWN:
-            	view.KeyPressed(TetrisKey.DOWN);
+            	view.keyPressed(TetrisKey.DOWN);
+            	break;
+            case NativeKeyEvent.VK_ESCAPE:
+            	view.keyPressed(TetrisKey.STOP);
             	break;
             }
-            
-            if (e.getKeyCode() == NativeKeyEvent.VK_ESCAPE) {
-                    GlobalScreen.unregisterNativeHook();
-            }
     }
 
     @Override
-	public void nativeKeyReleased(NativeKeyEvent e) {
-            //System.out.println("Key Released: " + NativeKeyEvent.getKeyText(e.getKeyCode()));
-    }
+	public void nativeKeyReleased(NativeKeyEvent e) {}
 
     @Override
-	public void nativeKeyTyped(NativeKeyEvent e) {
-            //System.out.println("Key Typed: " + NativeKeyEvent.getKeyText(e.getKeyCode()));
-    }
+	public void nativeKeyTyped(NativeKeyEvent e) {}
 }

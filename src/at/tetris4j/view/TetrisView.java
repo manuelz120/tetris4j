@@ -2,31 +2,31 @@ package at.tetris4j.view;
 
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
+import org.jnativehook.GlobalScreen;
 
 import at.tetris4j.controller.IController;
 import at.tetris4j.model.IModel;
 import at.tetris4j.model.components.BoardPresentation;
+import at.tetris4j.view.utils.GlobalKeyListener;
 import at.tetris4j.view.utils.TetrisKey;
 
-public class TetrisView implements IView {
+public class TetrisView implements IConsoleView {
 	
-	private IController controller;
-	private IModel model;
-	private BoardPresentation boardPresentation;
-	
+	private final IController controller;
 
-	public TetrisView(IController controller, IModel model){
+	public TetrisView(IController controller){
 		this.controller = controller;
-		this.model = model;
+		
+		GlobalScreen.getInstance().addNativeKeyListener(new GlobalKeyListener(this));
 	}
 	
 	@Override
-	public void render(){
-		updateScreen();
+	public void showStartScreen() {
+		AnsiConsole.out.print(Ansi.ansi().eraseScreen());
 	}
 	
 	@Override
-	public void KeyPressed(TetrisKey key) {
+	public void keyPressed(TetrisKey key) {
 		switch (key){
 		case UP:
 			controller.upPressed();
@@ -66,16 +66,12 @@ public class TetrisView implements IView {
 		}
 	}
 	
-	private void updateScreen(){
-		while (true) {
-			AnsiConsole.out.print(Ansi.ansi().eraseScreen());			
-			boardPresentation = model.getGameBoard();
-			AnsiConsole.out.print(boardPresentation.getOutput());
-			try {
-				Thread.sleep(500);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
+	@Override
+	public void updateScreen(IModel model) {
+		AnsiConsole.out.print(Ansi.ansi().cursor(0,0));
+		
+		BoardPresentation boardPresentation = model.getGameBoard();
+		
+		AnsiConsole.out.print(boardPresentation.getOutput());
 	}
 }

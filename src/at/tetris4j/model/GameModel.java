@@ -2,7 +2,6 @@ package at.tetris4j.model;
 
 import at.tetris4j.model.components.BoardPresentation;
 import at.tetris4j.model.components.GameBoard;
-import at.tetris4j.view.utils.TetrisKey;
 
 public class GameModel implements IModel {
 
@@ -13,18 +12,23 @@ public class GameModel implements IModel {
 	}
 	
 	@Override
+	public void updateGame() {
+		gameBoard.updateGameBoard();
+	}
+	
+	@Override
 	public BoardPresentation getGameBoard() {
 		return this.gameBoard.getBoardPresentation();
 	}
 
 	@Override
 	public void moveLeft() {
-		gameBoard.moveCurrentBlock(TetrisKey.LEFT);
+		gameBoard.moveLeft();
 	}
 
 	@Override
 	public void moveRight() {
-		gameBoard.moveCurrentBlock(TetrisKey.RIGHT);
+		gameBoard.moveRight();
 	}
 
 	@Override
@@ -46,7 +50,7 @@ public class GameModel implements IModel {
 
 	@Override
 	public void moveDown() {
-		gameBoard.moveCurrentBlock(TetrisKey.DOWN);
+		
 	}
 
 }

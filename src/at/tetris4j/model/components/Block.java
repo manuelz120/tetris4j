@@ -46,27 +46,29 @@ public class Block {
 		return x;
 	}
 
-	public void setX(int x) {
-		this.x = x;
-	}
-
+	public void moveRight() {
+		x++;
+	}	
+	
+	public void moveLeft() {
+		x--;
+	}	
+	
 	public int getY() {
 		return y;
 	}
 
-	public void setY(int y) {
-		this.y = y;
+	public void moveDown() {
+		y++;
 	}
-
+	
 	public Color getColor() {
 		return color;
 	}
 
-	public void setColor(Color color) {
-		this.color = color;
-	}
-
 	public Blocktype getBlocktype() {
 		return blocktype;
-	}	
+	}
+
+
 }

@@ -1,10 +1,7 @@
 package at.tetris4j.model.components;
 
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
-import at.tetris4j.resources.AnsiCodes;
 import at.tetris4j.view.utils.TetrisKey;
 
 /**
@@ -14,7 +11,7 @@ import at.tetris4j.view.utils.TetrisKey;
  * 
  */
 public class GameBoard {
-	private static final int REFRESH_RATE = 500;
+	
 	private static final String LINE = "|                                    |";
 	private static final String HORLINE = "--------------------------------------";
 	private int width;
@@ -22,7 +19,6 @@ public class GameBoard {
 	private Block currentBlock;
 	private ArrayList<String> gameBoard;
 	private ArrayList<String> oldBoard;
-	private Timer updateTimer;
 	private BoardPresentation boardPresentation;
 
 	public GameBoard(int height) {
@@ -30,18 +26,6 @@ public class GameBoard {
 		this.height = height;
 		currentBlock = new Block();
 		initializeGameBoard(height);
-		initializeUpdateTimer();
-	}
-
-	private void initializeUpdateTimer() {
-		updateTimer = new Timer();
-		updateTimer.scheduleAtFixedRate(new TimerTask() {
-			@Override
-			public void run() {
-				updateCurrentBlockPosition();
-				removeFilledRows();
-			}
-		}, REFRESH_RATE, REFRESH_RATE);
 	}
 
 	private void initializeGameBoard(int height) {
@@ -112,6 +96,11 @@ public class GameBoard {
 		return true;
 	}
 
+	public void updateGameBoard() {
+		updateCurrentBlockPosition();
+		removeFilledRows();
+	}
+	
 	/**
 	 * Remove filled Rows from the GameBoard.
 	 */
@@ -132,17 +121,17 @@ public class GameBoard {
 	 *            A TetrisKey specifying the direction, in which the current
 	 *            block should be moved. Possible Inputs: LEFT;RIGHT;DOWN;
 	 */
-	public void moveCurrentBlock(TetrisKey direction) {
+	private void moveCurrentBlock(TetrisKey direction) {
 		if (canCurrentBlockMove(direction)) {
 			switch (direction) {
 			case DOWN:
-				currentBlock.setY(currentBlock.getY() + 1);
+				currentBlock.moveDown();
 				break;
 			case LEFT:
-				currentBlock.setX(currentBlock.getX() - 1);
+				currentBlock.moveLeft();
 				break;
 			case RIGHT:
-				currentBlock.setX(currentBlock.getX() + 1);
+				currentBlock.moveRight();
 				break;
 			default:
 				break;
@@ -179,14 +168,14 @@ public class GameBoard {
 	private void updateBoardPresentation() {
 		gameBoard.clear();
 
+		//TODO building the string should not be done here
+		
 		StringBuilder sb = new StringBuilder();
-		sb.append(AnsiCodes.ANSI_CLS);
 		gameBoard = new ArrayList<String>(oldBoard);
 		String[] presentation = currentBlock.getPresentation();
 
 		for (int j = 0; j < presentation.length; j++) {
-			char[] chars = oldBoard.get(currentBlock.getY() + 1 + j)
-					.toCharArray();
+			char[] chars = oldBoard.get(currentBlock.getY() + 1 + j).toCharArray();
 
 			for (int k = 0; k < presentation[j].length(); k++) {
 				chars[currentBlock.getX() + k] = presentation[j].charAt(k);
@@ -208,5 +197,15 @@ public class GameBoard {
 
 	public int getHeight() {
 		return height;
+	}
+
+	public void moveLeft() {
+		// TODO remove TetrisKey
+		moveCurrentBlock(TetrisKey.LEFT);
+	}
+	
+	public void moveRight() {
+		// TODO remove TetrisKey
+		moveCurrentBlock(TetrisKey.RIGHT);
 	}
 }

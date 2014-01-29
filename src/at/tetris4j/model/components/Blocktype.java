@@ -8,15 +8,42 @@ import java.util.Random;
  *
  */
 public enum Blocktype {
-	I,
-	J,
-	L,
-	O,
-	S,
-	T,
-	Z;
+	I (new String[]{"#",
+					"#",
+					"#",
+					"#",
+					"#"}),
+					
+	J (new String[]{" #",
+					" #",
+					" #",
+					"##"}),
+					
+	L (new String[]{"#",
+					"#",
+					"#",
+					"##"}),
+					
+	O (new String[]{"##",
+					"##"}),
+					
+	S (new String[]{" ##",
+					"##"}),
+					
+	T (new String[]{" # ",
+					"###"}),
+					
+	Z ( new String[]{"##",
+					 " ##"});
+	
+	private String[] form;
+	
+	private Blocktype(String[] form) {
+		this.form = form;
+	}
 	
 	private static Random random = new Random();
+	
 	
 	/**
 	 * Method to get the basic presentation form of a Tetris-Block.
@@ -24,38 +51,7 @@ public enum Blocktype {
 	 * A string[] which represents the form of the block.
 	 */
 	public String[] getBasicBlock(){		
-		switch(this){
-		case I:
-			return new String[]{"#",
-								"#",
-								"#",
-								"#",
-								"#"};
-		case J:
-			return new String[]{" #",
-								" #",
-								" #",
-								"##"};
-		case L:
-			return new String[]{"#",
-								"#",
-								"#"
-							   ,"##"};
-		case O:
-			return new String[]{"##",
-								"##"};
-		case S:
-			return new String[]{" ##",
-								"##"};
-		case T:
-			return new String[]{" # ",
-								"###"};
-		case Z:
-			return new String[]{"##",
-								" ##"};
-		default:
-			return null;
-		}
+		return form;
 	}
 	
 	public static Blocktype getRandomBlockType(){
