@@ -81,11 +81,31 @@ public class GameBoard {
 			return false;
 		case LEFT:
 			if (currentBlock.getX() - 1 > 0) {
+				String[] presentation = currentBlock.getPresentation();
+				for (int i = 0; i < presentation.length; i++) {
+					String currentLine = currentBlock.getPresentation()[i];
+					int start = currentBlock.getX()+currentLine.indexOf("#");
+					String currentBoardLine = oldBoard.get(
+							currentBlock.getY() + i + 1);
+					if (currentBoardLine.charAt(start-1) != ' ') {
+						return false;
+					}
+				}
 				return true;
-			}
+			} 
 			return false;
 		case RIGHT:
 			if (currentBlock.getX() + currentBlock.getWidth() < LINE.length() - 1) {
+				String[] presentation = currentBlock.getPresentation();
+				for (int i = 0; i < presentation.length; i++) {
+					String currentLine = currentBlock.getPresentation()[i];
+					int end = currentBlock.getX()+currentLine.lastIndexOf("#")+1;
+					String currentBoardLine = oldBoard.get(
+							currentBlock.getY() + i + 1);
+					if (currentBoardLine.charAt(end) != ' ') {
+						return false;
+					}
+				}
 				return true;
 			}
 			return false;
