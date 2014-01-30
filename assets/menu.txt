@@ -1,0 +1,15 @@
+			
+
+							Welcome to Tetris4J!
+
+			What do you want to do?
+
+ 				* Press 1 for Singleplayer!
+
+				* Press 2 for Multiplayer!
+				
+				* Press ESC to end the game!
+
+			Enjoy!
+
+			Made by Florian Genser and Manuel Zametter!
