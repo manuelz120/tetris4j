@@ -3,6 +3,8 @@ package at.tetris4j.controller;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import org.jnativehook.GlobalScreen;
+
 import at.tetris4j.model.IModel;
 import at.tetris4j.view.IView;
 import at.tetris4j.view.TetrisView;
@@ -54,6 +56,7 @@ public class GameController implements IController{
 	@Override
 	public void stopPressed() {
 		this.gameRunning = false;
+		GlobalScreen.unregisterNativeHook();
 	}
 	
 	@Override
