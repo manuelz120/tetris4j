@@ -98,12 +98,12 @@ public class GameController implements IController{
 	}
 
 	@Override
-	public void onePressed() {
+	public void singleplayerPressed() {
 		startSingleplayerMode();
 	}
 
 	@Override
-	public void twoPressed() {
+	public void multiplayerPressed() {
 		
 	}
 

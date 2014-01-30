@@ -12,8 +12,8 @@ public interface IController {
 	void aPressed();
 	void sPressed();
 	void dPressed();
-	void onePressed();
-	void twoPressed();
+	void singleplayerPressed();
+	void multiplayerPressed();
 	
 	void startGame();
 	void startSingleplayerMode();

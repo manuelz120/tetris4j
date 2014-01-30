@@ -8,4 +8,5 @@ public interface IView {
 	void updateScreen(IModel model);
 	
 	void showStartScreen();
+	
 }

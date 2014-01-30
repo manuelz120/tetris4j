@@ -18,27 +18,32 @@ import at.tetris4j.view.utils.TetrisKey;
 public class TetrisView implements IConsoleView {
 	
 	private final IController controller;
+	private int lineCount;
 
 	public TetrisView(IController controller){
 		this.controller = controller;
-		
+		lineCount = 0;
 		GlobalScreen.getInstance().addNativeKeyListener(new GlobalKeyListener(this));
 	}
 	
 	@Override
 	public void showStartScreen() {
+		AnsiConsole.out.print(Ansi.ansi().cursor(0,0));
 		AnsiConsole.out.print(Ansi.ansi().eraseScreen());
 		try {
 			String[] heading = Utils.readLines(System.getProperty("user.dir") + File.separator + "assets" + File.separator + "heading.txt");
 			for(String s : heading){
 				AnsiConsole.out.println(Ansi.ansi().fg(Color.YELLOW).a("\t\t"+s).reset());
+				lineCount++;
 			}
 			AnsiConsole.out.println();
 			AnsiConsole.out.println();
 			AnsiConsole.out.println();
+			lineCount+=3;
 			String[] menu = Utils.readLines(System.getProperty("user.dir") + File.separator + "assets" + File.separator + "menu.txt");
 			for(String s : menu){
 				AnsiConsole.out.println(Ansi.ansi().fg(Color.BLUE).a("\t"+s).reset());
+				lineCount++;
 			}
 			
 		} catch (IOException e) {
@@ -82,10 +87,10 @@ public class TetrisView implements IConsoleView {
 		case STOP:
 			controller.stopPressed();
 			break;
-		case ONE:
-			controller.onePressed();
+		case SINGLEPLAYER:
+			controller.singleplayerPressed();
 			break;
-		case TWO:
+		case MULTIPLAYER:
 			break;
 		default:
 			break;
@@ -94,7 +99,7 @@ public class TetrisView implements IConsoleView {
 	
 	@Override
 	public void updateScreen(IModel model) {
-		AnsiConsole.out.print(Ansi.ansi().cursor(0,0));
+		AnsiConsole.out.print(Ansi.ansi().cursor(lineCount+5,0));
 		
 		BoardPresentation boardPresentation = model.getGameBoard();
 		

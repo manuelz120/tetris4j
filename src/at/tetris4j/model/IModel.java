@@ -21,4 +21,6 @@ public interface IModel {
 	public void resume();
 	
 	public void stop();
+	
+	public void startNewGame();
 }
