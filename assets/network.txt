@@ -1,0 +1,15 @@
+  __  __       _ _   _       _                       
+ |  \/  |_   _| | |_(_)_ __ | | __ _ _   _  ___ _ __ 
+ | |\/| | | | | | __| | '_ \| |/ _` | | | |/ _ \ '__|
+ | |  | | |_| | | |_| | |_) | | (_| | |_| |  __/ |   
+ |_|  |_|\__,_|_|\__|_| .__/|_|\__,_|\__, |\___|_|   
+                      |_|            |___/           
+
+Congrats! You succesfully opened the network mode!
+
+How would you like to continue?
+
+		* Press 8 to start a new Server and wait for your
+		  opponent to connect!
+
+		* Press 9 to connect to your opponent using ip and port!

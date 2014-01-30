@@ -57,7 +57,7 @@ public class GameModel implements IModel {
 
 	@Override
 	public void moveDown() {
-		
+		gameBoardPlayer1.moveDown();
 	}
 	
 	public boolean isMultiplayer() {

@@ -91,6 +91,11 @@ public class TetrisView implements IConsoleView {
 			controller.singleplayerPressed();
 			break;
 		case MULTIPLAYER:
+			controller.multiplayerPressed();
+			break;
+		case SERVER:
+			break;
+		case HOST:
 			break;
 		default:
 			break;
@@ -104,5 +109,21 @@ public class TetrisView implements IConsoleView {
 		BoardPresentation boardPresentation = model.getGameBoard();
 		
 		AnsiConsole.out.print(boardPresentation.getOutput());
+	}
+
+	@Override
+	public void showNetworkInfoScreen() {
+		AnsiConsole.out.print(Ansi.ansi().cursor(0,0));
+		AnsiConsole.out.print(Ansi.ansi().eraseScreen());
+		String[] networkInfo;
+		try {
+			networkInfo = Utils.readLines(System.getProperty("user.dir") + File.separator + "assets" + File.separator + "network.txt");
+			for(String s : networkInfo){
+				AnsiConsole.out.println(Ansi.ansi().fg(Color.GREEN).a("\t\t"+s).reset());
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 	}
 }

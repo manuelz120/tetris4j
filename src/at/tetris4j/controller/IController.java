@@ -18,4 +18,6 @@ public interface IController {
 	void startGame();
 	void startSingleplayerMode();
 	void startMultiplayerMode();
+	void serverPressed();
+	void hostPressed();
 }

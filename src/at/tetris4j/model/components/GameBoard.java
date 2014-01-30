@@ -20,12 +20,14 @@ public class GameBoard {
 	private ArrayList<String> gameBoard;
 	private ArrayList<String> oldBoard;
 	private BoardPresentation boardPresentation;
+	private int refreshCount;
 
 	public GameBoard(int height) {
 		oldBoard = new ArrayList<String>();
 		this.height = height;
 		currentBlock = new Block();
 		initializeGameBoard(height);
+		refreshCount = 0;
 	}
 
 	private void initializeGameBoard(int height) {
@@ -119,13 +121,13 @@ public class GameBoard {
 	public void updateGameBoard() {
 		updateCurrentBlockPosition();
 		removeFilledRows();
+		refreshCount++;
 	}
 	
 	/**
 	 * Remove filled Rows from the GameBoard.
 	 */
 	private void removeFilledRows() {
-		// TODO: Test it!
 		for (int i = 1; i < height + 1; i++) {
 			if (!oldBoard.get(i).contains(" ") && oldBoard.get(i).contains("|")) {
 				oldBoard.remove(i);
@@ -175,7 +177,10 @@ public class GameBoard {
 	 * Update the position of the current block.
 	 */
 	private void updateCurrentBlockPosition() {
-		moveCurrentBlock(TetrisKey.DOWN);
+		if(refreshCount % 5 == 0){
+			moveCurrentBlock(TetrisKey.DOWN);
+			refreshCount = 0;
+		}
 	}
 
 	/**
@@ -231,5 +236,9 @@ public class GameBoard {
 	public void moveRight() {
 		// TODO remove TetrisKey
 		moveCurrentBlock(TetrisKey.RIGHT);
+	}
+	
+	public void moveDown() {
+		moveCurrentBlock(TetrisKey.DOWN);
 	}
 }

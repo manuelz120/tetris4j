@@ -12,6 +12,8 @@ public enum TetrisKey {
 	D,
 	SINGLEPLAYER,
 	MULTIPLAYER,
+	SERVER,
+	HOST,
 	PAUSE,
 	RESUME,
 	STOP;

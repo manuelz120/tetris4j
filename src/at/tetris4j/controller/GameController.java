@@ -11,7 +11,7 @@ import at.tetris4j.view.TetrisView;
 
 public class GameController implements IController{
 
-	private static final int REFRESH_RATE = 500;
+	private static final int REFRESH_RATE = 100;
 	
 	private final IModel model;
 	private final IView view;
@@ -50,7 +50,7 @@ public class GameController implements IController{
 
 	@Override
 	public void downPressed() {
-		//model.moveDown();		
+		model.moveDown();		
 	}
 
 	@Override
@@ -104,7 +104,7 @@ public class GameController implements IController{
 
 	@Override
 	public void multiplayerPressed() {
-		
+		view.showNetworkInfoScreen();
 	}
 
 	@Override
@@ -145,6 +145,16 @@ public class GameController implements IController{
 
 	@Override
 	public void startMultiplayerMode() {
+		
+	}
+
+	@Override
+	public void serverPressed() {
+		
+	}
+
+	@Override
+	public void hostPressed() {
 		
 	}
 

@@ -18,7 +18,7 @@ public class GlobalKeyListener implements NativeKeyListener {
     @Override
 	public void nativeKeyPressed(NativeKeyEvent e) {
     		long now = System.currentTimeMillis();
-    		if (now - delta < 300)	{
+    		if (now - delta < 100)	{
     			return;
     		}
     		
@@ -45,6 +45,12 @@ public class GlobalKeyListener implements NativeKeyListener {
             	break;
             case NativeKeyEvent.VK_2:
             	view.keyPressed(TetrisKey.MULTIPLAYER);
+            	break;
+            case NativeKeyEvent.VK_8:
+            	view.keyPressed(TetrisKey.SERVER);
+            	break;
+            case NativeKeyEvent.VK_9:
+            	view.keyPressed(TetrisKey.HOST);
             	break;
             }
     }
