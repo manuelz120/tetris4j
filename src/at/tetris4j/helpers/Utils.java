@@ -7,8 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Utils {
-	public static String[] readLines(String filename) throws IOException {
-        FileReader fileReader = new FileReader(filename);
+	public static String[] readLines(String filename) {
+		try {
+			FileReader fileReader = new FileReader(filename);
         BufferedReader bufferedReader = new BufferedReader(fileReader);
         List<String> lines = new ArrayList<String>();
         String line = null;
@@ -17,5 +18,10 @@ public class Utils {
         }
         bufferedReader.close();
         return lines.toArray(new String[lines.size()]);
+		} catch (IOException e){
+			System.out.println(e.getMessage());
+		}
+        return null;
     }
+	
 }
