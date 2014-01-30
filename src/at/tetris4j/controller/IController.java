@@ -12,7 +12,10 @@ public interface IController {
 	void aPressed();
 	void sPressed();
 	void dPressed();
-	
+	void onePressed();
+	void twoPressed();
 	
 	void startGame();
+	void startSingleplayerMode();
+	void startMultiplayerMode();
 }

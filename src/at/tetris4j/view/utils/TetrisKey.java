@@ -10,6 +10,8 @@ public enum TetrisKey {
 	A,
 	S,
 	D,
+	ONE,
+	TWO,
 	PAUSE,
 	RESUME,
 	STOP;

@@ -29,39 +29,6 @@ public class GameController implements IController{
 		this.gameRunning = true;
 		
 		view.showStartScreen();
-		
-		final Timer updateTimer = new Timer();
-		updateTimer.scheduleAtFixedRate(new TimerTask() {
-			@Override
-			public void run() {
-				model.updateGame();
-				
-				if (!gameRunning) {
-					//TODO cancel is not working correctly
-					updateTimer.cancel();
-				}
-			}
-		}, REFRESH_RATE, REFRESH_RATE);
-		
-		
-		new Thread(new Runnable() {
-			//TODO extract the thread out of this method
-			@Override
-			public void run() {
-				
-				while (gameRunning) {
-					
-					view.updateScreen(model);
-					
-					try {
-						Thread.sleep(500);
-					} catch (InterruptedException e) {
-						gameRunning = false;
-					}
-				}
-			}
-			
-		}).start();
 	}
 	
 	@Override
@@ -124,6 +91,57 @@ public class GameController implements IController{
 	@Override
 	public void dPressed() {
 		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onePressed() {
+		startSingleplayerMode();
+	}
+
+	@Override
+	public void twoPressed() {
+		
+	}
+
+	@Override
+	public void startSingleplayerMode() {
+		final Timer updateTimer = new Timer();
+		updateTimer.scheduleAtFixedRate(new TimerTask() {
+			@Override
+			public void run() {
+				model.updateGame();
+				
+				if (!gameRunning) {
+					//TODO cancel is not working correctly
+					updateTimer.cancel();
+				}
+			}
+		}, REFRESH_RATE, REFRESH_RATE);
+		
+		
+		new Thread(new Runnable() {
+			//TODO extract the thread out of this method
+			@Override
+			public void run() {
+				
+				while (gameRunning) {
+					
+					view.updateScreen(model);
+					
+					try {
+						Thread.sleep(REFRESH_RATE);
+					} catch (InterruptedException e) {
+						gameRunning = false;
+					}
+				}
+			}
+			
+		}).start();
+	}
+
+	@Override
+	public void startMultiplayerMode() {
 		
 	}
 

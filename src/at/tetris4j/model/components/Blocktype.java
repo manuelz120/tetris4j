@@ -28,12 +28,12 @@ public enum Blocktype {
 					"##"}),
 					
 	S (new String[]{" ##",
-					"##"}),
+					"## "}),
 					
 	T (new String[]{" # ",
 					"###"}),
 					
-	Z ( new String[]{"##",
+	Z ( new String[]{"## ",
 					 " ##"});
 	
 	private String[] form;

@@ -26,28 +26,25 @@ public class Block {
 	}
 	
 	public void turn(){
-		//TODO: Turn the block in one direction;
-		ArrayList<char[]> presentationList = new ArrayList<char[]>();
-		ArrayList<String> turnedPresentation = new ArrayList<String>();
-		int maxCount = 0;
-		for(String line : presentation){
-			if(line.length() > maxCount){
-				maxCount = line.length();
-			}
-			presentationList.add(line.toCharArray());
-		}
+		//TODO: Turn the block in one direction;		
 		
-		for(int i = 0; i < maxCount; i++){
+		ArrayList<String> newPresentation = new ArrayList<String>();
+		
+		
+		for(int i = 0; i<presentation[0].length(); i++){
 			StringBuilder sb = new StringBuilder();
-			for(char[] chars : presentationList){
-				if(chars.length > maxCount){
-					sb.append(chars[i]);
-				}
+			for(String s : presentation){
+				sb.append(s.charAt(i));
 			}
-			turnedPresentation.add(sb.toString());
+			if(sb.toString() != null){
+				newPresentation.add(sb.toString());				
+			}
 		}
 		
-		presentation = turnedPresentation.toArray(presentation);
+		presentation = new String[newPresentation.size()];
+		for(int i = 0; i < newPresentation.size(); i++){
+			presentation[i] = newPresentation.get(i);
+		}
 	}
 	
 	public String[] getPresentation(){
