@@ -1,5 +1,8 @@
 package at.tetris4j.view;
 
+import java.io.File;
+import java.io.IOException;
+
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.Ansi.Color;
 import org.fusesource.jansi.AnsiConsole;
@@ -13,43 +16,44 @@ import at.tetris4j.view.utils.GlobalKeyListener;
 import at.tetris4j.view.utils.TetrisKey;
 
 public class TetrisView implements IConsoleView {
-
+	
 	private final IController controller;
 	private int lineCount;
 
-	public TetrisView(IController controller) {
+	public TetrisView(IController controller){
 		this.controller = controller;
 		lineCount = 0;
-		GlobalScreen.getInstance().addNativeKeyListener(
-				new GlobalKeyListener(this));
+		GlobalScreen.getInstance().addNativeKeyListener(new GlobalKeyListener(this));
 	}
-
+	
 	@Override
 	public void showStartScreen() {
-		AnsiConsole.out.print(Ansi.ansi().cursor(0, 0));
+		AnsiConsole.out.print(Ansi.ansi().cursor(0,0));
 		AnsiConsole.out.print(Ansi.ansi().eraseScreen());
-		String[] heading = Utils.readLines(System.getProperty("/assets/heading.txt"));
-		for (String s : heading) {
-			AnsiConsole.out.println(Ansi.ansi().fg(Color.YELLOW).a("\t\t" + s)
-					.reset());
-			lineCount++;
+		try {
+			String[] heading = Utils.readLines(System.getProperty("user.dir") + File.separator + "assets" + File.separator + "heading.txt");
+			for(String s : heading){
+				AnsiConsole.out.println(Ansi.ansi().fg(Color.YELLOW).a("\t\t"+s).reset());
+				lineCount++;
+			}
+			AnsiConsole.out.println();
+			AnsiConsole.out.println();
+			AnsiConsole.out.println();
+			lineCount+=3;
+			String[] menu = Utils.readLines(System.getProperty("user.dir") + File.separator + "assets" + File.separator + "menu.txt");
+			for(String s : menu){
+				AnsiConsole.out.println(Ansi.ansi().fg(Color.BLUE).a("\t"+s).reset());
+				lineCount++;
+			}
+			
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		AnsiConsole.out.println();
-		AnsiConsole.out.println();
-		AnsiConsole.out.println();
-		lineCount += 3;
-		String[] menu = Utils.readLines("/assets/menu.txt");
-		for (String s : menu) {
-			AnsiConsole.out.println(Ansi.ansi().fg(Color.BLUE).a("\t" + s)
-					.reset());
-			lineCount++;
-		}
-
 	}
-
+	
 	@Override
 	public void keyPressed(TetrisKey key) {
-		switch (key) {
+		switch (key){
 		case UP:
 			controller.upPressed();
 			break;
@@ -97,24 +101,29 @@ public class TetrisView implements IConsoleView {
 			break;
 		}
 	}
-
+	
 	@Override
 	public void updateScreen(IModel model) {
-		AnsiConsole.out.print(Ansi.ansi().cursor(lineCount + 5, 0));
+		AnsiConsole.out.print(Ansi.ansi().cursor(lineCount+5,0));
+		
 		BoardPresentation boardPresentation = model.getGameBoard();
+		
 		AnsiConsole.out.print(boardPresentation.getOutput());
 	}
 
 	@Override
 	public void showNetworkInfoScreen() {
-		AnsiConsole.out.print(Ansi.ansi().cursor(0, 0));
+		AnsiConsole.out.print(Ansi.ansi().cursor(0,0));
 		AnsiConsole.out.print(Ansi.ansi().eraseScreen());
 		String[] networkInfo;
-		networkInfo = Utils.readLines("/assets/network.txt");
-		for (String s : networkInfo) {
-			AnsiConsole.out.println(Ansi.ansi().fg(Color.GREEN).a("\t\t" + s)
-					.reset());
+		try {
+			networkInfo = Utils.readLines(System.getProperty("user.dir") + File.separator + "assets" + File.separator + "network.txt");
+			for(String s : networkInfo){
+				AnsiConsole.out.println(Ansi.ansi().fg(Color.GREEN).a("\t\t"+s).reset());
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-
+		
 	}
 }
