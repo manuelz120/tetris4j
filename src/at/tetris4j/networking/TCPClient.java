@@ -1,40 +1,82 @@
 package at.tetris4j.networking;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.InetAddress;
 import java.net.Socket;
 
+import at.tetris4j.model.components.BoardPresentation;
+
 public class TCPClient {
-	
+
+	private final int PORT = 3000;
 	private InetAddress serverIp;
-	private int port;
-	
-	public TCPClient(InetAddress serverIp)
-	{
-		try
-		{
-			//ceating the socket to connect to server running on same machine binded on port no 3000
-			Socket client=new Socket("localhost",3000);
+	private boolean inNetworkMode;
+	private BoardPresentation boardPresentation;
+	private BoardPresentation otherBoardPresentation;
+	private Socket client;
+	private PrintStream out;
+	private BufferedReader in;
+
+	public TCPClient(InetAddress serverIp) {
+		try {
+			client = new Socket(serverIp, PORT);
 			System.out.println("Client connected ");
-			//getting the o/p stream of that connection
-			PrintStream out=new PrintStream(client.getOutputStream());
-			//sending the message to server
-			out.print("Hello from client\n");
-			out.flush();
-			//reading the response using input stream
-			BufferedReader in= new BufferedReader(new InputStreamReader(client.getInputStream()));
-			System.out.println(in.readLine());
-			//closing the streams
+			out = new PrintStream(client.getOutputStream());
+			in = new BufferedReader(new InputStreamReader(
+					client.getInputStream()));
+		} catch (Exception err) {
+			System.err.println("* err" + err);
+		}
+	}
+
+	public void run() {
+		out.print(boardPresentation.toString());
+		out.flush();
+		// reading the response using input stream
+		StringBuilder sb = new StringBuilder();
+		try {
+			String s;
+			while ((s = in.readLine()) != null) {
+				sb.append(s);
+			}
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+			System.out.println("Failed to read inputStream!");
+		}
+		otherBoardPresentation = new BoardPresentation(sb.toString());
+	}
+
+	public boolean isInNetworkMode() {
+		return inNetworkMode;
+	}
+
+	public void setInNetworkMode(boolean inNetworkMode) {
+		this.inNetworkMode = inNetworkMode;
+	}
+
+	public BoardPresentation getOtherBoardPresentation() {
+		return otherBoardPresentation;
+	}
+
+	public void setBoardPresentation(BoardPresentation boardPresentation) {
+		this.boardPresentation = boardPresentation;
+	}
+
+	public InetAddress getServerIp() {
+		return serverIp;
+	}
+	
+	public void closeStreams() {
+		try {
 			in.close();
 			out.close();
- 
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+			System.out.println("Failed to close streams!");
 		}
-		catch(Exception err)
-		{
-			System.err.println("* err"+err);
-		}
-			
 	}
+
 }
