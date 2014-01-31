@@ -133,7 +133,15 @@ public class TetrisView implements IConsoleView {
 			BoardPresentation boardPresentation = model.getGameBoard();
 
 			AnsiConsole.out.print(boardPresentation.getOutput());
-		}		
+		} else if (gameState == GameState.Multiplayer){
+			AnsiConsole.out.print(Ansi.ansi().eraseScreen());
+			AnsiConsole.out.print(Ansi.ansi().cursor(0, 0));
+			BoardPresentation player1BoardPresentation = model.getGameBoard();
+			AnsiConsole.out.print(player1BoardPresentation.getOutput());
+			AnsiConsole.out.print(Ansi.ansi().cursor(0, 50));
+			BoardPresentation player2BoardPresentation = model.getOtherBoardPresentation();
+			AnsiConsole.out.print(player2BoardPresentation.getOutput());			
+		}
 	}
 
 	@Override

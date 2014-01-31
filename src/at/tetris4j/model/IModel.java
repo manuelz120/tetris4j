@@ -23,4 +23,6 @@ public interface IModel {
 	public void stop();
 	
 	public void startNewGame();
+	
+	public BoardPresentation getOtherBoardPresentation();
 }
