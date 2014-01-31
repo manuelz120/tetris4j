@@ -81,4 +81,11 @@ public class GameModel implements IModel {
 		tcpClient = new TCPClient(ip);
 	}
 
+	@Override
+	public void startNewMultiplayerGame() {
+		startNewGame();
+		isMultiplayer = true;
+		tcpClient = new TCPClient();
+	}
+
 }

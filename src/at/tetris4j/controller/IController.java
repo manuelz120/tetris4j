@@ -20,4 +20,5 @@ public interface IController {
 	void startGame();
 	void startSingleplayerMode();
 	void startMultiplayerMode(InetAddress ip);
+	void startMultiplayerMode();
 }

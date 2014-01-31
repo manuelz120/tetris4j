@@ -120,7 +120,7 @@ public class TetrisView implements IConsoleView {
 				controller.singleplayerPressed();
 			} else if (gameState == GameState.NetworkInput) {
 				gameState = GameState.WaitingForConnection;
-				System.out.println("START SERVER");
+				controller.startMultiplayerMode();
 			}
 			break;
 		case FUNCTIONKEY_2:

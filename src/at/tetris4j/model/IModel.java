@@ -28,5 +28,7 @@ public interface IModel {
 	
 	public void startNewMultiplayerGame(InetAddress ip);
 	
+	public void startNewMultiplayerGame();
+	
 	public BoardPresentation getOtherBoardPresentation();
 }

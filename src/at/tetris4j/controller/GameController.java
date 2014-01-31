@@ -148,4 +148,9 @@ public class GameController implements IController{
 	public void startMultiplayerMode(InetAddress ip) {
 		model.startNewMultiplayerGame(ip);
 	}
+
+	@Override
+	public void startMultiplayerMode() {
+		model.startNewMultiplayerGame();
+	}
 }

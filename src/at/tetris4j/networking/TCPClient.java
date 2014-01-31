@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.InetAddress;
+import java.net.ServerSocket;
 import java.net.Socket;
 
 import at.tetris4j.model.components.BoardPresentation;
@@ -12,9 +13,8 @@ import at.tetris4j.model.components.BoardPresentation;
 public class TCPClient implements Runnable {
 
 	private final int PORT = 3000;
-	private InetAddress serverIp;
+	private InetAddress remoteIp;
 	private InetAddress localIp;
-	private boolean inNetworkMode;
 	private BoardPresentation boardPresentation;
 	private BoardPresentation otherBoardPresentation;
 	private Socket client;
@@ -25,9 +25,10 @@ public class TCPClient implements Runnable {
 
 	public TCPClient(InetAddress serverIp) {
 		try {
-			client = new Socket(serverIp, PORT);
+			this.remoteIp = serverIp;
+			client = new Socket(remoteIp, PORT);
 			localIp = client.getLocalAddress();
-			System.out.println("Client connected ");
+			System.out.println("Successfully connected ");
 			out = new PrintStream(client.getOutputStream());
 			in = new BufferedReader(new InputStreamReader(
 					client.getInputStream()));
@@ -38,9 +39,19 @@ public class TCPClient implements Runnable {
 		isRunning = true;
 		networkThread.start();
 	}
+	
+	public TCPClient(){
+		networkThread = new Thread(this);
+		isRunning = true;
+		networkThread.start();
+	}
 
 	@Override
 	public void run() {
+		if(remoteIp == null){
+			waitForIncomingConnections();
+		}
+		
 		while (isRunning) {
 			out.print(boardPresentation.toString());
 			out.flush();
@@ -64,12 +75,23 @@ public class TCPClient implements Runnable {
 		}
 	}
 
-	public boolean isInNetworkMode() {
-		return inNetworkMode;
-	}
-
-	public void setInNetworkMode(boolean inNetworkMode) {
-		this.inNetworkMode = inNetworkMode;
+	private void waitForIncomingConnections() {
+		try {
+			ServerSocket serverSocket = new ServerSocket(PORT, 1, InetAddress.getLocalHost());
+			System.out.println();
+			System.out.println();
+			System.out.println("Started listening socket at "+ serverSocket.getInetAddress()); 
+			while(remoteIp == null){
+				remoteIp = serverSocket.accept().getLocalAddress();
+			}
+			serverSocket.close();
+			client = new Socket(remoteIp, PORT);
+			localIp = client.getLocalAddress();
+			isRunning = true;
+			System.out.println("Successfully connected ");
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 	}
 
 	public BoardPresentation getOtherBoardPresentation() {
@@ -80,8 +102,8 @@ public class TCPClient implements Runnable {
 		this.boardPresentation = boardPresentation;
 	}
 
-	public InetAddress getServerIp() {
-		return serverIp;
+	public InetAddress getRemoteIp() {
+		return remoteIp;
 	}
 
 	public void closeStreams() {
