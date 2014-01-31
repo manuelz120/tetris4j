@@ -1,8 +1,5 @@
 package at.tetris4j.view;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Scanner;
@@ -45,10 +42,7 @@ public class TetrisView implements IConsoleView {
 		AnsiConsole.out.print(Ansi.ansi().cursor(0, 0));
 		AnsiConsole.out.print(Ansi.ansi().eraseScreen());
 
-		InputStream in = getClass().getResourceAsStream("/heading.txt");
-		BufferedReader input = new BufferedReader(new InputStreamReader(in));
-
-		String[] heading = Utils.readLines(input);
+		String[] heading = Utils.readLines("/heading.txt");
 		for (String s : heading) {
 			AnsiConsole.out.println(Ansi.ansi().fg(Color.YELLOW).a("\t" + s)
 					.reset());
@@ -59,10 +53,7 @@ public class TetrisView implements IConsoleView {
 		AnsiConsole.out.println();
 		lineCount += 3;
 
-		in = getClass().getResourceAsStream("/menu.txt");
-		input = new BufferedReader(new InputStreamReader(in));
-
-		String[] menu = Utils.readLines(input);
+		String[] menu = Utils.readLines("/menu.txt");
 		for (String s : menu) {
 			AnsiConsole.out.println(Ansi.ansi().fg(Color.BLUE).a(s).reset());
 			lineCount++;
@@ -190,10 +181,7 @@ public class TetrisView implements IConsoleView {
 		gameState = GameState.NetworkInput;
 		AnsiConsole.out.print(Ansi.ansi().cursor(0, 0));
 		AnsiConsole.out.print(Ansi.ansi().eraseScreen());
-		String[] networkInfo;
-		InputStream in = getClass().getResourceAsStream("/network.txt");
-		BufferedReader input = new BufferedReader(new InputStreamReader(in));
-		networkInfo = Utils.readLines(input);
+		String[] networkInfo = Utils.readLines("/network.txt");
 		for (String s : networkInfo) {
 			AnsiConsole.out.println(Ansi.ansi().fg(Color.GREEN).a("\t\t" + s)
 					.reset());
@@ -204,10 +192,7 @@ public class TetrisView implements IConsoleView {
 	public void showGoodbyeScreen() {
 		AnsiConsole.out.print(Ansi.ansi().cursor(0, 0));
 		AnsiConsole.out.print(Ansi.ansi().eraseScreen());
-		String[] goodbyeString;
-		InputStream in = getClass().getResourceAsStream("/goodbye.txt");
-		BufferedReader input = new BufferedReader(new InputStreamReader(in));
-		goodbyeString = Utils.readLines(input);
+		String[] goodbyeString = Utils.readLines("/goodbye.txt");
 		for (String s : goodbyeString) {
 			AnsiConsole.out.println(Ansi.ansi().fg(Color.GREEN).a("\t" + s)
 					.reset());

@@ -39,8 +39,8 @@ public class TCPClient implements Runnable {
 		isRunning = true;
 		networkThread.start();
 	}
-	
-	public TCPClient(){
+
+	public TCPClient() {
 		networkThread = new Thread(this);
 		isRunning = true;
 		networkThread.start();
@@ -48,11 +48,12 @@ public class TCPClient implements Runnable {
 
 	@Override
 	public void run() {
-		if(remoteIp == null){
+		if (remoteIp == null) {
 			waitForIncomingConnections();
 		}
-		
+
 		while (isRunning) {
+
 			out.print(boardPresentation.toString());
 			out.flush();
 			// reading the response using input stream
@@ -76,17 +77,16 @@ public class TCPClient implements Runnable {
 	}
 
 	private void waitForIncomingConnections() {
-		try {
-			ServerSocket serverSocket = new ServerSocket(PORT, 1, InetAddress.getLocalHost());
+		try (ServerSocket serverSocket = new ServerSocket(PORT, 1,
+				InetAddress.getLocalHost());) {
 			System.out.println();
 			System.out.println();
-			System.out.println("Started listening socket at "+ serverSocket.getInetAddress()); 
-			while(remoteIp == null){
-				remoteIp = serverSocket.accept().getLocalAddress();
-			}
-			serverSocket.close();
-			client = new Socket(remoteIp, PORT);
-			localIp = client.getLocalAddress();
+			System.out.println("Started listening socket at "
+					+ serverSocket.getInetAddress());
+			Socket client = serverSocket.accept();
+			out = new PrintStream(client.getOutputStream());
+			in = new BufferedReader(new InputStreamReader(
+					client.getInputStream()));
 			isRunning = true;
 			System.out.println("Successfully connected ");
 		} catch (IOException e1) {
