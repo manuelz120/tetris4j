@@ -79,6 +79,7 @@ public class GameModel implements IModel {
 		startNewGame();
 		isMultiplayer = true;
 		tcpClient = new TCPClient(ip);
+		tcpClient.setBoardPresentation(gameBoardPlayer1.getBoardPresentation());
 	}
 
 	@Override
@@ -86,6 +87,7 @@ public class GameModel implements IModel {
 		startNewGame();
 		isMultiplayer = true;
 		tcpClient = new TCPClient();
+		tcpClient.setBoardPresentation(gameBoardPlayer1.getBoardPresentation());
 	}
 
 }

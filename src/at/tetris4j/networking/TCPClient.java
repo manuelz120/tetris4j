@@ -83,7 +83,7 @@ public class TCPClient implements Runnable {
 			System.out.println();
 			System.out.println("Started listening socket at "
 					+ serverSocket.getInetAddress());
-			Socket client = serverSocket.accept();
+			client = serverSocket.accept();
 			out = new PrintStream(client.getOutputStream());
 			in = new BufferedReader(new InputStreamReader(
 					client.getInputStream()));
