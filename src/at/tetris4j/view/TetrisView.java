@@ -13,6 +13,7 @@ import at.tetris4j.controller.IController;
 import at.tetris4j.helpers.Utils;
 import at.tetris4j.model.IModel;
 import at.tetris4j.model.components.BoardPresentation;
+import at.tetris4j.view.utils.GameState;
 import at.tetris4j.view.utils.GlobalKeyListener;
 import at.tetris4j.view.utils.TetrisKey;
 
@@ -20,6 +21,7 @@ public class TetrisView implements IConsoleView {
 
 	private final IController controller;
 	private int lineCount;
+	private GameState gameState = GameState.MainMenu;
 
 	public TetrisView(IController controller) {
 		this.controller = controller;
@@ -30,6 +32,7 @@ public class TetrisView implements IConsoleView {
 
 	@Override
 	public void showStartScreen() {
+		gameState = GameState.MainMenu;
 		AnsiConsole.out.print(Ansi.ansi().cursor(0, 0));
 		AnsiConsole.out.print(Ansi.ansi().eraseScreen());
 
@@ -62,16 +65,24 @@ public class TetrisView implements IConsoleView {
 	public void keyPressed(TetrisKey key) {
 		switch (key) {
 		case UP:
-			controller.upPressed();
+			if (gameState == GameState.SinglePlayer
+					|| gameState == GameState.Multiplayer)
+				controller.upPressed();
 			break;
 		case DOWN:
-			controller.downPressed();
+			if (gameState == GameState.SinglePlayer
+					|| gameState == GameState.Multiplayer)
+				controller.downPressed();
 			break;
 		case LEFT:
-			controller.leftPressed();
+			if (gameState == GameState.SinglePlayer
+					|| gameState == GameState.Multiplayer)
+				controller.leftPressed();
 			break;
 		case RIGHT:
-			controller.rightPressed();
+			if (gameState == GameState.SinglePlayer
+					|| gameState == GameState.Multiplayer)
+				controller.rightPressed();
 			break;
 		case W:
 			controller.wPressed();
@@ -94,15 +105,20 @@ public class TetrisView implements IConsoleView {
 		case STOP:
 			controller.stopPressed();
 			break;
-		case SINGLEPLAYER:
-			controller.singleplayerPressed();
+		case FUNCTIONKEY_1:
+			if (gameState == GameState.MainMenu)
+				controller.singleplayerPressed();
+			else if (gameState == GameState.NetworkInput) {
+				gameState = GameState.WaitingForConnection;
+				System.out.println("START SERVER");
+			}
 			break;
-		case MULTIPLAYER:
-			controller.multiplayerPressed();
-			break;
-		case SERVER:
-			break;
-		case HOST:
+		case FUNCTIONKEY_2:
+			if (gameState == GameState.MainMenu)
+				controller.multiplayerPressed();
+			else if (gameState == GameState.NetworkInput) {
+				System.out.println("PLEASE TYPE IN YOUR DESIRED IP ADDRESS:");
+			}
 			break;
 		default:
 			break;
@@ -111,15 +127,18 @@ public class TetrisView implements IConsoleView {
 
 	@Override
 	public void updateScreen(IModel model) {
-		AnsiConsole.out.print(Ansi.ansi().cursor(lineCount + 5, 0));
+		if(gameState == GameState.SinglePlayer){
+			AnsiConsole.out.print(Ansi.ansi().cursor(lineCount + 5, 0));
 
-		BoardPresentation boardPresentation = model.getGameBoard();
+			BoardPresentation boardPresentation = model.getGameBoard();
 
-		AnsiConsole.out.print(boardPresentation.getOutput());
+			AnsiConsole.out.print(boardPresentation.getOutput());
+		}		
 	}
 
 	@Override
 	public void showNetworkInfoScreen() {
+		gameState = GameState.NetworkInput;
 		AnsiConsole.out.print(Ansi.ansi().cursor(0, 0));
 		AnsiConsole.out.print(Ansi.ansi().eraseScreen());
 		String[] networkInfo;

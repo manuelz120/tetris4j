@@ -9,7 +9,7 @@ Congrats! You succesfully opened the network mode!
 
 How would you like to continue?
 
-		* Press 8 to start a new Server and wait for your
+		* Press 1 to start a new Server and wait for your
 		  opponent to connect!
 
-		* Press 9 to connect to your opponent using ip and port!
+		* Press 2 to connect to your opponent using ip and port!
