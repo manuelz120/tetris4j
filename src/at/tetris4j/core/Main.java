@@ -17,8 +17,7 @@ public class Main {
 		
 		IModel model = new GameModel();
 		IController controller = new GameController(model);
-		
-		// start game
+
 		controller.startGame();
 
 	}

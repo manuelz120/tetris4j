@@ -5,11 +5,11 @@
  |_|  |_|\__,_|_|\__|_| .__/|_|\__,_|\__, |\___|_|   
                       |_|            |___/           
 
-Congrats! You succesfully opened the network mode!
+Congratulations! You successfully opened the network mode!
 
 How would you like to continue?
 
 		* Press 1 to start a new Server and wait for your
 		  opponent to connect!
 
-		* Press 2 to connect to your opponent using ip and port!
+		* Press 2 to connect to your opponent using ip!

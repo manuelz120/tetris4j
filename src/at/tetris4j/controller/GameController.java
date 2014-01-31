@@ -1,5 +1,6 @@
 package at.tetris4j.controller;
 
+import java.net.InetAddress;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -144,18 +145,7 @@ public class GameController implements IController{
 	}
 
 	@Override
-	public void startMultiplayerMode() {
-		
+	public void startMultiplayerMode(InetAddress ip) {
+		model.startNewMultiplayerGame(ip);
 	}
-
-	@Override
-	public void serverPressed() {
-		
-	}
-
-	@Override
-	public void hostPressed() {
-		
-	}
-
 }

@@ -1,5 +1,7 @@
 package at.tetris4j.model;
 
+import java.net.InetAddress;
+
 import at.tetris4j.model.components.BoardPresentation;
 import at.tetris4j.model.components.GameBoard;
 import at.tetris4j.networking.TCPClient;
@@ -61,14 +63,6 @@ public class GameModel implements IModel {
 	public void moveDown() {
 		gameBoardPlayer1.moveDown();
 	}
-	
-	public boolean isMultiplayer() {
-		return isMultiplayer;
-	}
-
-	public void setMultiplayer(boolean isMultiplayer) {
-		this.isMultiplayer = isMultiplayer;
-	}
 
 	@Override
 	public void startNewGame() {
@@ -78,6 +72,13 @@ public class GameModel implements IModel {
 	@Override
 	public BoardPresentation getOtherBoardPresentation() {
 		return this.otherBoardPresentation;
+	}
+
+	@Override
+	public void startNewMultiplayerGame(InetAddress ip) {
+		startNewGame();
+		isMultiplayer = true;
+		tcpClient = new TCPClient(ip);
 	}
 
 }
