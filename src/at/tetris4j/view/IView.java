@@ -10,4 +10,6 @@ public interface IView {
 	void showStartScreen();
 	
 	void showNetworkInfoScreen();
+	
+	void showGoodbyeScreen();
 }

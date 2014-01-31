@@ -41,16 +41,10 @@ public class GlobalKeyListener implements NativeKeyListener {
             	view.keyPressed(TetrisKey.STOP);
             	break;
             case NativeKeyEvent.VK_1:
-            	view.keyPressed(TetrisKey.SINGLEPLAYER);
+            	view.keyPressed(TetrisKey.FUNCTIONKEY_1);
             	break;
             case NativeKeyEvent.VK_2:
-            	view.keyPressed(TetrisKey.MULTIPLAYER);
-            	break;
-            case NativeKeyEvent.VK_8:
-            	view.keyPressed(TetrisKey.SERVER);
-            	break;
-            case NativeKeyEvent.VK_9:
-            	view.keyPressed(TetrisKey.HOST);
+            	view.keyPressed(TetrisKey.FUNCTIONKEY_2);
             	break;
             }
     }

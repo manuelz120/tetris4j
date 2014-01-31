@@ -10,10 +10,8 @@ public enum TetrisKey {
 	A,
 	S,
 	D,
-	SINGLEPLAYER,
-	MULTIPLAYER,
-	SERVER,
-	HOST,
+	FUNCTIONKEY_1,
+	FUNCTIONKEY_2,
 	PAUSE,
 	RESUME,
 	STOP;

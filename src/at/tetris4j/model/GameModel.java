@@ -1,14 +1,18 @@
 package at.tetris4j.model;
 
+import java.net.InetAddress;
+
 import at.tetris4j.model.components.BoardPresentation;
 import at.tetris4j.model.components.GameBoard;
+import at.tetris4j.networking.TCPClient;
 
 public class GameModel implements IModel {
 
 	private static final int _HEIGHT = 20;
 	private GameBoard gameBoardPlayer1;
-	private GameBoard gameBoardPlayer2;
+	private BoardPresentation otherBoardPresentation;
 	private boolean isMultiplayer;
+	private TCPClient tcpClient;
 
 	public GameModel(){
 		this.gameBoardPlayer1 = new GameBoard(20);
@@ -17,15 +21,15 @@ public class GameModel implements IModel {
 	@Override
 	public void updateGame() {
 		gameBoardPlayer1.updateGameBoard();
+		if(isMultiplayer){
+			tcpClient.setBoardPresentation(gameBoardPlayer1.getBoardPresentation());
+			otherBoardPresentation = tcpClient.getOtherBoardPresentation();
+		}		
 	}
 	
 	@Override
 	public BoardPresentation getGameBoard() {
-		if(isMultiplayer){
-			return new BoardPresentation(" ");
-		} else {
-			return this.gameBoardPlayer1.getBoardPresentation();
-		}
+		return this.gameBoardPlayer1.getBoardPresentation();
 	}
 
 	@Override
@@ -59,18 +63,29 @@ public class GameModel implements IModel {
 	public void moveDown() {
 		gameBoardPlayer1.moveDown();
 	}
-	
-	public boolean isMultiplayer() {
-		return isMultiplayer;
-	}
-
-	public void setMultiplayer(boolean isMultiplayer) {
-		this.isMultiplayer = isMultiplayer;
-	}
 
 	@Override
 	public void startNewGame() {
 		this.gameBoardPlayer1 = new GameBoard(_HEIGHT);		
+	}
+
+	@Override
+	public BoardPresentation getOtherBoardPresentation() {
+		return this.otherBoardPresentation;
+	}
+
+	@Override
+	public void startNewMultiplayerGame(InetAddress ip) {
+		startNewGame();
+		isMultiplayer = true;
+		tcpClient = new TCPClient(ip);
+	}
+
+	@Override
+	public void startNewMultiplayerGame() {
+		startNewGame();
+		isMultiplayer = true;
+		tcpClient = new TCPClient();
 	}
 
 }

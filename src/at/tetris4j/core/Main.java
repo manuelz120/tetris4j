@@ -12,12 +12,12 @@ import at.tetris4j.model.IModel;
 public class Main {
 
 	public static void main(String[] args) {
+		
 		initializeGame();
 		
 		IModel model = new GameModel();
 		IController controller = new GameController(model);
-		
-		// start game
+
 		controller.startGame();
 
 	}

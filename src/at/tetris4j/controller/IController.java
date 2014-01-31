@@ -1,5 +1,7 @@
 package at.tetris4j.controller;
 
+import java.net.InetAddress;
+
 public interface IController {
 	void leftPressed();
 	void rightPressed();
@@ -17,7 +19,6 @@ public interface IController {
 	
 	void startGame();
 	void startSingleplayerMode();
+	void startMultiplayerMode(InetAddress ip);
 	void startMultiplayerMode();
-	void serverPressed();
-	void hostPressed();
 }
