@@ -16,6 +16,7 @@ public class GameModel implements IModel {
 
 	public GameModel(){
 		this.gameBoardPlayer1 = new GameBoard(20);
+		otherBoardPresentation = new BoardPresentation("");
 	}
 	
 	@Override
@@ -88,6 +89,13 @@ public class GameModel implements IModel {
 		isMultiplayer = true;
 		tcpClient = new TCPClient();
 		tcpClient.setBoardPresentation(gameBoardPlayer1.getBoardPresentation());
+	}
+
+	@Override
+	public boolean isConnectionEstablished() {
+		if(tcpClient == null)
+			return false;
+		return tcpClient.isConnectionEstablished();
 	}
 
 }

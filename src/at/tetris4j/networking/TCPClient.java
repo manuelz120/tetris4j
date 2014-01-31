@@ -22,6 +22,7 @@ public class TCPClient implements Runnable {
 	private BufferedReader in;
 	private Thread networkThread;
 	private boolean isRunning;
+	private boolean connectionEstablished;
 
 	public TCPClient(InetAddress serverIp) {
 		try {
@@ -37,6 +38,7 @@ public class TCPClient implements Runnable {
 		}
 		networkThread = new Thread(this);
 		isRunning = true;
+		connectionEstablished = false;
 		networkThread.start();
 	}
 
@@ -51,9 +53,9 @@ public class TCPClient implements Runnable {
 		if (remoteIp == null) {
 			waitForIncomingConnections();
 		}
-
+		connectionEstablished = true;
+		
 		while (isRunning) {
-
 			out.print(boardPresentation.toString());
 			out.flush();
 			// reading the response using input stream
@@ -129,4 +131,8 @@ public class TCPClient implements Runnable {
 		return localIp;
 	}
 
+	public boolean isConnectionEstablished() {
+		return connectionEstablished;
+	}
+	
 }

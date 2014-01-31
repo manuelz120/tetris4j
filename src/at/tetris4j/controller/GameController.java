@@ -143,14 +143,54 @@ public class GameController implements IController{
 			
 		}).start();
 	}
+	
+	private void showMultiplayerScreen() {
+		final Timer updateTimer = new Timer();
+		updateTimer.scheduleAtFixedRate(new TimerTask() {
+			@Override
+			public void run() {
+				if(model.isConnectionEstablished()){
+					model.updateGame();
+				}
+				if (!gameRunning) {
+					//TODO cancel is not working correctly
+					updateTimer.cancel();
+				}
+			}
+		}, REFRESH_RATE, REFRESH_RATE);
+		
+		
+		new Thread(new Runnable() {
+			//TODO extract the thread out of this method
+			@Override
+			public void run() {
+				
+				while (gameRunning) {
+					if(model.isConnectionEstablished()){
+						view.updateScreen(model);
+					}
+					
+					
+					try {
+						Thread.sleep(REFRESH_RATE);
+					} catch (InterruptedException e) {
+						gameRunning = false;
+					}
+				}
+			}
+			
+		}).start();
+	}
 
 	@Override
 	public void startMultiplayerMode(InetAddress ip) {
 		model.startNewMultiplayerGame(ip);
+		showMultiplayerScreen();
 	}
 
 	@Override
 	public void startMultiplayerMode() {
 		model.startNewMultiplayerGame();
+		showMultiplayerScreen();
 	}
 }

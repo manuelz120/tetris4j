@@ -110,7 +110,7 @@ public class TetrisView implements IConsoleView {
 				gameState = GameState.SinglePlayer;
 				controller.singleplayerPressed();
 			} else if (gameState == GameState.NetworkInput) {
-				gameState = GameState.WaitingForConnection;
+				gameState = GameState.Multiplayer;
 				controller.startMultiplayerMode();
 			}
 			break;
@@ -165,14 +165,15 @@ public class TetrisView implements IConsoleView {
 
 			AnsiConsole.out.print(boardPresentation.getOutput());
 		} else if (gameState == GameState.Multiplayer) {
-			AnsiConsole.out.print(Ansi.ansi().eraseScreen());
 			AnsiConsole.out.print(Ansi.ansi().cursor(0, 0));
+			AnsiConsole.out.print(Ansi.ansi().eraseScreen());
 			BoardPresentation player1BoardPresentation = model.getGameBoard();
 			AnsiConsole.out.print(player1BoardPresentation.getOutput());
 			AnsiConsole.out.print(Ansi.ansi().cursor(0, 50));
 			BoardPresentation player2BoardPresentation = model
 					.getOtherBoardPresentation();
-			AnsiConsole.out.print(player2BoardPresentation.getOutput());
+			if(player2BoardPresentation != null)
+				AnsiConsole.out.print(player2BoardPresentation.getOutput());
 		}
 	}
 

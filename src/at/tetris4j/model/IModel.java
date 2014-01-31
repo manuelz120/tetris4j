@@ -31,4 +31,6 @@ public interface IModel {
 	public void startNewMultiplayerGame();
 	
 	public BoardPresentation getOtherBoardPresentation();
+	
+	public boolean isConnectionEstablished();
 }
