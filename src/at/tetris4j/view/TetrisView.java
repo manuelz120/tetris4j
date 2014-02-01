@@ -21,19 +21,16 @@ import at.tetris4j.view.utils.TetrisKey;
 public class TetrisView implements IConsoleView {
 
 	private static final String IP_PATTERN = "^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
-			+ "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
-			+ "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
-			+ "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";
+											+ "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
+											+ "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
+											+ "([01]?\\d\\d?|2[0-4]\\d|25[0-5])$";
 
 	private final IController controller;
-	private int lineCount;
 	private GameState gameState = GameState.MainMenu;
 
 	public TetrisView(IController controller) {
 		this.controller = controller;
-		lineCount = 0;
-		GlobalScreen.getInstance().addNativeKeyListener(
-				new GlobalKeyListener(this));
+		GlobalScreen.getInstance().addNativeKeyListener(new GlobalKeyListener(this));
 	}
 
 	@Override
@@ -44,19 +41,15 @@ public class TetrisView implements IConsoleView {
 
 		String[] heading = Utils.readLines("/heading.txt");
 		for (String s : heading) {
-			AnsiConsole.out.println(Ansi.ansi().fg(Color.YELLOW).a("\t" + s)
-					.reset());
-			lineCount++;
+			AnsiConsole.out.println(Ansi.ansi().fg(Color.YELLOW).a("\t" + s).reset());
 		}
 		AnsiConsole.out.println();
 		AnsiConsole.out.println();
 		AnsiConsole.out.println();
-		lineCount += 3;
 
 		String[] menu = Utils.readLines("/menu.txt");
 		for (String s : menu) {
 			AnsiConsole.out.println(Ansi.ansi().fg(Color.BLUE).a(s).reset());
-			lineCount++;
 		}
 	}
 
@@ -76,39 +69,27 @@ public class TetrisView implements IConsoleView {
 		case LEFT:
 			if (gameState == GameState.SinglePlayer
 					|| gameState == GameState.Multiplayer)
-				controller.leftPressed();
+				controller.moveLeft();
 			break;
 		case RIGHT:
 			if (gameState == GameState.SinglePlayer
 					|| gameState == GameState.Multiplayer)
-				controller.rightPressed();
-			break;
-		case W:
-			controller.wPressed();
-			break;
-		case A:
-			controller.aPressed();
-			break;
-		case S:
-			controller.sPressed();
-			break;
-		case D:
-			controller.dPressed();
+				controller.moveRight();
 			break;
 		case PAUSE:
-			controller.pausePressed();
+			controller.pauseGame();
 			break;
 		case RESUME:
-			controller.resumePressed();
+			controller.resumeGame();
 			break;
 		case STOP:
-			controller.stopPressed();
-			showGoodbyeScreen();
+			controller.stopGame();
 			break;
 		case FUNCTIONKEY_1:
 			if (gameState == GameState.MainMenu) {
 				gameState = GameState.SinglePlayer;
-				controller.singleplayerPressed();
+				controller.startSinglePlayerMode();
+				AnsiConsole.out.print(Ansi.ansi().eraseScreen());
 			} else if (gameState == GameState.NetworkInput) {
 				gameState = GameState.Multiplayer;
 				controller.startMultiplayerMode();
@@ -142,24 +123,21 @@ public class TetrisView implements IConsoleView {
 		try {
 			InetAddress ipAddress = InetAddress.getByName(ip);
 			System.out.println(ipAddress.toString());
-			scanner.close();
 			controller.startMultiplayerMode(ipAddress);
 			this.gameState = GameState.Multiplayer;
 		} catch (UnknownHostException e) {
-			e.printStackTrace();
+			System.out.println("could not find host " + e);
+			controller.stopGame();
 		} finally {
-			try {
-				GlobalScreen.registerNativeHook();
-			} catch (NativeHookException e) {
-				e.printStackTrace();
-			}
+			scanner.close();
+			registerNativeHook();
 		}
 	}
 
 	@Override
 	public void updateScreen(IModel model) {
 		if (gameState == GameState.SinglePlayer) {
-			AnsiConsole.out.print(Ansi.ansi().cursor(lineCount + 5, 0));
+			AnsiConsole.out.print(Ansi.ansi().cursor(0, 0));
 
 			BoardPresentation boardPresentation = model.getGameBoard();
 
@@ -170,8 +148,7 @@ public class TetrisView implements IConsoleView {
 			BoardPresentation player1BoardPresentation = model.getGameBoard();
 			AnsiConsole.out.print(player1BoardPresentation.getOutput());
 			AnsiConsole.out.print(Ansi.ansi().cursor(0, 50));
-			BoardPresentation player2BoardPresentation = model
-					.getOtherBoardPresentation();
+			BoardPresentation player2BoardPresentation = model.getOtherBoardPresentation();
 			if(player2BoardPresentation != null)
 				AnsiConsole.out.print(player2BoardPresentation.getOutput());
 		}
@@ -184,20 +161,48 @@ public class TetrisView implements IConsoleView {
 		AnsiConsole.out.print(Ansi.ansi().eraseScreen());
 		String[] networkInfo = Utils.readLines("/network.txt");
 		for (String s : networkInfo) {
-			AnsiConsole.out.println(Ansi.ansi().fg(Color.GREEN).a("\t\t" + s)
-					.reset());
+			AnsiConsole.out.println(Ansi.ansi().fg(Color.GREEN).a("\t\t" + s).reset());
 		}
 	}
 
 	@Override
+	public void showGameOverScreen() {
+		AnsiConsole.out.print(Ansi.ansi().cursor(0, 0));
+		AnsiConsole.out.print(Ansi.ansi().eraseScreen());
+		
+		String[] goodbyeString = Utils.readLines("/gameover.txt");
+		for (String s : goodbyeString) {
+			AnsiConsole.out.println(Ansi.ansi().fg(Color.RED).a("\t" + s).reset());
+		}
+		
+		unregisterNativeHook();
+	}
+	
+	@Override
 	public void showGoodbyeScreen() {
 		AnsiConsole.out.print(Ansi.ansi().cursor(0, 0));
 		AnsiConsole.out.print(Ansi.ansi().eraseScreen());
+		
 		String[] goodbyeString = Utils.readLines("/goodbye.txt");
 		for (String s : goodbyeString) {
-			AnsiConsole.out.println(Ansi.ansi().fg(Color.GREEN).a("\t" + s)
-					.reset());
+			AnsiConsole.out.println(Ansi.ansi().fg(Color.GREEN).a("\t" + s).reset());
 		}
+		
+		unregisterNativeHook();
 	}
 
+	
+	private void registerNativeHook() {
+		try {
+			GlobalScreen.registerNativeHook();
+		} catch (NativeHookException e) {
+			System.out.println("native hook could not be registered");
+			controller.stopGame();
+		}
+		
+	}
+
+	private void unregisterNativeHook() {
+		GlobalScreen.unregisterNativeHook();
+	}
 }

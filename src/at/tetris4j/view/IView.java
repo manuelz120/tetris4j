@@ -11,5 +11,7 @@ public interface IView {
 	
 	void showNetworkInfoScreen();
 	
+	void showGameOverScreen();
+	
 	void showGoodbyeScreen();
 }

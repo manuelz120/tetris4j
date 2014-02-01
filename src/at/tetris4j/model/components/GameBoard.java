@@ -1,6 +1,6 @@
 package at.tetris4j.model.components;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 
 import at.tetris4j.view.utils.TetrisKey;
 
@@ -12,130 +12,75 @@ import at.tetris4j.view.utils.TetrisKey;
  */
 public class GameBoard {
 	
-	private static final String LINE =    "|                   |";
-	private static final String HORLINE = "---------------------";
+	private static final int DEFAULT_WIDTH = 20;
+	
+	private boolean isGameOver = false;
+	
 	private int width;
 	private int height;
+	private int[][] myBoard;
 	private Block currentBlock;
-	private ArrayList<String> gameBoard;
-	private ArrayList<String> oldBoard;
 	private BoardPresentation boardPresentation;
-	private int refreshCount;
 
-	public GameBoard(int height) {
-		oldBoard = new ArrayList<String>();
-		this.height = height;
-		currentBlock = new Block();
-		initializeGameBoard(height);
-		refreshCount = 0;
-	}
-
-	private void initializeGameBoard(int height) {
-		gameBoard = new ArrayList<String>();
-		gameBoard.add(HORLINE);
-		for (int i = 0; i < height; i++) {
-			gameBoard.add(LINE);
-		}
-		gameBoard.add(HORLINE);
-		oldBoard = new ArrayList<String>(gameBoard);
+	public GameBoard(int theHeight) {
+		this.height = theHeight;
+		this.width = DEFAULT_WIDTH;
+		currentBlock = Block.getRandomBlock(width);
+		myBoard = new int[height][width];
 		updateBoardPresentation();
 	}
 
-	/**
-	 * Checks whether the current block can turn
-	 * 
-	 * @return True if the current block can turn, otherwise false.
-	 */
-	private boolean canCurrentBlockTurn() {
-		// TODO: Check if specific block can turn.
+	private boolean canMoveLeft() {
+		
+		final int currentY = currentBlock.getY();
+		final int currentX = currentBlock.getX();
+		final int[][] block = currentBlock.getBlock();
+		final int blockHeight = block.length;
+		final int blockWidth = block[0].length;
+		
+		if (currentX - 1 < 0) {
+			return false;
+		}
+		
+		for (int j = 0; j < blockWidth; j++) {
+			for (int i = 0; i < blockHeight; i++) {
+				if (block[i][j] != 0 && myBoard[i + currentY][j + currentX - 1] != 0) {
+					return false;
+				}
+			}
+			
+		}
 		return true;
 	}
-
-	/**
-	 * Checks whether the current block can move in a specified direction.
-	 * 
-	 * @param direction
-	 *            A TetrisKey, used to specify a direction. Possible inputs:
-	 *            LEFT;RIGHT;DOWN
-	 * @return True if the current block can move in the specified direction,
-	 *         otherwise false.
-	 */
-	private boolean canCurrentBlockMove(TetrisKey direction) {
-		switch (direction) {
-		case DOWN:
-			if (currentBlock.getY() < this.height) {
-				String[] presentation = currentBlock.getPresentation();
-				for (int i = 0; i < presentation.length; i++) {
-					String currentLine = currentBlock.getPresentation()[i];
-					int start = currentBlock.getX()+currentLine.indexOf("#");
-					int end = currentBlock.getX()+currentLine.lastIndexOf("#")+1;
-					String lineBelowCurrentLine = oldBoard.get(
-							currentBlock.getY() + i + 2).substring(start, end);
-					if (lineBelowCurrentLine.contains("#")
-							|| lineBelowCurrentLine.contains("-")) {
-						currentBlock = new Block();
-						oldBoard = new ArrayList<String>(gameBoard);
-						return false;
-					}
-				}
-				return true;
-			}
+	
+	private boolean canMoveRight() {
+		
+		final int currentY = currentBlock.getY();
+		final int currentX = currentBlock.getX();
+		final int[][] block = currentBlock.getBlock();
+		final int blockHeight = block.length;
+		final int blockWidth = block[0].length;
+		
+		if (currentX + blockWidth >= width) {
 			return false;
-		case LEFT:
-			if (currentBlock.getX() - 1 > 0) {
-				String[] presentation = currentBlock.getPresentation();
-				for (int i = 0; i < presentation.length; i++) {
-					String currentLine = currentBlock.getPresentation()[i];
-					int start = currentBlock.getX()+currentLine.indexOf("#");
-					String currentBoardLine = oldBoard.get(
-							currentBlock.getY() + i + 1);
-					if (currentBoardLine.charAt(start-1) != ' ') {
-						return false;
-					}
-				}
-				return true;
-			} 
-			return false;
-		case RIGHT:
-			if (currentBlock.getX() + currentBlock.getWidth() < LINE.length() - 1) {
-				String[] presentation = currentBlock.getPresentation();
-				for (int i = 0; i < presentation.length; i++) {
-					String currentLine = currentBlock.getPresentation()[i];
-					int end = currentBlock.getX()+currentLine.lastIndexOf("#")+1;
-					String currentBoardLine = oldBoard.get(
-							currentBlock.getY() + i + 1);
-					if (currentBoardLine.charAt(end) != ' ') {
-						return false;
-					}
-				}
-				return true;
-			}
-			return false;
-		default:
-			break;
 		}
-
+		
+		for (int j = blockWidth - 1; j >= 0; j--) {
+			for (int i = 0; i < blockHeight; i++) {
+				if (block[i][j] != 0 && myBoard[i + currentY][j + currentX + 1] != 0) {
+					return false;
+				}
+			}
+			
+		}
 		return true;
 	}
 
 	public void updateGameBoard() {
-		updateCurrentBlockPosition();
-		removeFilledRows();
-		refreshCount++;
+		moveCurrentBlock(TetrisKey.DOWN);
 	}
 	
-	/**
-	 * Remove filled Rows from the GameBoard.
-	 */
-	private void removeFilledRows() {
-		for (int i = 1; i < height + 1; i++) {
-			if (!oldBoard.get(i).contains(" ") && oldBoard.get(i).contains("|")) {
-				oldBoard.remove(i);
-				oldBoard.add(1, LINE);
-			}
-		}
-	}
-
+	
 	/**
 	 * Moves the current block in a specified direction, if it is possible.
 	 * 
@@ -144,20 +89,22 @@ public class GameBoard {
 	 *            block should be moved. Possible Inputs: LEFT;RIGHT;DOWN;
 	 */
 	private void moveCurrentBlock(TetrisKey direction) {
-		if (canCurrentBlockMove(direction)) {
-			switch (direction) {
-			case DOWN:
-				currentBlock.moveDown();
-				break;
-			case LEFT:
+		switch (direction) {
+		case DOWN:
+			currentBlock.moveDown();
+			break;
+		case LEFT:
+			if (canMoveLeft()) {
 				currentBlock.moveLeft();
-				break;
-			case RIGHT:
-				currentBlock.moveRight();
-				break;
-			default:
-				break;
 			}
+			break;
+		case RIGHT:
+			if (canMoveRight()) {
+				currentBlock.moveRight();
+			}
+			break;
+		default:
+			break;
 		}
 		updateBoardPresentation();
 	}
@@ -167,22 +114,208 @@ public class GameBoard {
 	 */
 	public void turnCurrentBlock() {
 		if (canCurrentBlockTurn()) {
-			// TODO: Turn the current block;
 			currentBlock.turn();
 			updateBoardPresentation();
 		}
 	}
 
+	
+	
 	/**
-	 * Update the position of the current block.
+	 * Checks whether the current block can turn
+	 * 
+	 * @return True if the current block can turn, otherwise false.
 	 */
-	private void updateCurrentBlockPosition() {
-		if(refreshCount % 5 == 0){
-			moveCurrentBlock(TetrisKey.DOWN);
-			refreshCount = 0;
+	private boolean canCurrentBlockTurn() {
+
+		int[][] block = currentBlock.getBlock();
+		int currentX = currentBlock.getX();
+		int currentY = currentBlock.getY();
+		int blockWidth = currentBlock.getWidth();
+		int blockHeight = currentBlock.getHeight();
+		
+		if (currentX + blockHeight <= width) {
+			
+			for (int i = currentY, l = 0; i < blockWidth + currentY; i++, l++) {
+				
+				for (int j = currentX, n = blockHeight - 1; j <  blockHeight + currentX; j++, n--) {
+					
+					if (block[n][l] != 0 && myBoard[i][j] != 0) {
+						
+						return false;
+					}
+				}
+			}
+			return true;
+		}
+		return false;
+	}
+
+	private void updateGame() {
+		
+		if (checkForNewBlock()) {
+			
+			retireCurrentBlock();
+			removeFilledRows();
+			checkForGameOver();
+		}
+	}
+	
+	private boolean checkForNewBlock() {
+		
+		int[][] myBlock = currentBlock.getBlock();
+		int currentX = currentBlock.getX();
+		int currentY = currentBlock.getY();
+		int blockHeight = myBlock.length;
+		int blockWidth = myBlock[0].length;
+		
+		// checks if block is at bottom
+		if (currentY + blockHeight == height) {
+			
+			return true;
+		}
+		
+		for (int i = blockHeight - 1; i >= 0; i--) {
+			
+			for (int j = 0; j < blockWidth; j++) {
+				
+				if (myBlock[i][j] != 0 && myBoard[i + currentY + 1][j + currentX] != 0) {
+					
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	private void retireCurrentBlock() {
+
+		insertBlockIntoBoard(currentBlock, myBoard);
+		
+		currentBlock = Block.getRandomBlock(width);
+		
+	}
+	
+	
+	/**
+	 * Remove filled Rows from the GameBoard.
+	 */
+	private void removeFilledRows() {
+		for (int i = 0; i < height; i++) {
+			boolean rowFinished = true;
+			for (int j = 0; j < width; j++) {
+				
+				if (myBoard[i][j] == 0) {
+					rowFinished = false;
+					break;
+				}
+			}
+			if (rowFinished) {
+				
+				removeRow(i);
+			}
 		}
 	}
 
+	private void removeRow(int rowIndex) {
+		
+		int[][] newBoard = new int[height][width];
+		
+		Arrays.fill(newBoard[0], 0);
+		for (int i = 1; i <= rowIndex; i++) {
+			newBoard[i] = myBoard[i - 1];
+		}
+		
+		for (int i = rowIndex + 1; i < height; i++) {
+			newBoard[i] = myBoard[i];
+		}
+		
+		myBoard = newBoard;
+	}
+	
+	private void checkForGameOver() {
+		
+		for (int i = 0; i < myBoard[0].length; i++) {
+			
+			if (myBoard[0][i] != 0) {
+				isGameOver = true;
+			}
+		}
+		
+	}
+
+	private void updateBoardPresentation() {
+		
+		updateGame();
+		
+		int[][] workingCopyOfBoard = createCopyOfBoard(myBoard);
+		
+		insertBlockIntoBoard(currentBlock, workingCopyOfBoard);
+		
+		this.boardPresentation = createBoardPresentation(workingCopyOfBoard);
+//		System.out.println(boardPresentation.getOutput());
+	}
+
+
+	private BoardPresentation createBoardPresentation(int[][] workingCopyOfBoard) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i <= width + 1; i++) {
+			sb.append('-');
+		}
+		sb.append('\n');
+		for (int y = 0; y < height; y++) {
+			sb.append('|');
+			for (int x = 0; x < width; x++) {
+				int val = workingCopyOfBoard[y][x];
+				if (val != 0) {
+					sb.append('#');
+				} else {
+					sb.append(' ');
+				}
+				
+			}
+			sb.append('|');
+			sb.append('\n');
+		}
+		
+		for (int i = 0; i <= width + 1; i++) {
+			sb.append('-');
+		}
+		sb.append('\n');
+		
+		BoardPresentation boardPresentation = new BoardPresentation(sb.toString());
+		return boardPresentation;
+	}
+	
+	private int[][] createCopyOfBoard(int[][] board) {
+		int[][] copyBoard = new int[height][width];
+		
+		for (int i = 0; i < height; i++) {
+			
+			System.arraycopy(board[i], 0, copyBoard[i], 0, width);
+			
+		}
+		
+		return copyBoard;
+	}
+
+	private void insertBlockIntoBoard(Block block, int[][] board) {
+		final int[][] blockMatrix = block.getBlock();
+		final int xPosition = block.getX();
+		final int yPosition = block.getY();
+		
+		for (int i = 0; i < blockMatrix.length; i++) {
+			for (int j = 0; j < blockMatrix[0].length; j++) {
+				int value = blockMatrix[i][j];
+				if (value != 0) {
+					board[yPosition + i][xPosition + j] = value;
+				}
+				
+			}
+		}
+	}
+
+	
 	/**
 	 * Get a BoardPresentation to visualize the current GameState.
 	 * 
@@ -191,54 +324,20 @@ public class GameBoard {
 	public BoardPresentation getBoardPresentation() {
 		return this.boardPresentation;
 	}
-
-	private void updateBoardPresentation() {
-		gameBoard.clear();
-
-		//TODO building the string should not be done here
-		
-		StringBuilder sb = new StringBuilder();
-		gameBoard = new ArrayList<String>(oldBoard);
-		String[] presentation = currentBlock.getPresentation();
-
-		for (int j = 0; j < presentation.length; j++) {
-			char[] chars = oldBoard.get(currentBlock.getY() + 1 + j).toCharArray();
-
-			for (int k = 0; k < presentation[j].length(); k++) {
-				if(presentation[j].charAt(k)  == '#'){
-					chars[currentBlock.getX() + k] = presentation[j].charAt(k);					
-				}
-			}
-			gameBoard.set(currentBlock.getY() + 1 + j, String.valueOf(chars));
-		}
-
-		for (String s : gameBoard) {
-			sb.append(s);
-			sb.append("\n");
-		}
-
-		this.boardPresentation = new BoardPresentation(sb.toString());
-	}
-
-	public int getWidth() {
-		return width;
-	}
-
-	public int getHeight() {
-		return height;
-	}
-
+	
 	public void moveLeft() {
-		// TODO remove TetrisKey
 		moveCurrentBlock(TetrisKey.LEFT);
 	}
 	
 	public void moveRight() {
-		// TODO remove TetrisKey
 		moveCurrentBlock(TetrisKey.RIGHT);
 	}
 	
 	public void moveDown() {
 		moveCurrentBlock(TetrisKey.DOWN);
+	}
+	
+	public boolean isGameOver() {
+		return isGameOver;
 	}
 }

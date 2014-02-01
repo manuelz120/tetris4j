@@ -1,5 +1,6 @@
 package at.tetris4j.model.components;
 
+import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -8,37 +9,31 @@ import java.util.Random;
  *
  */
 public enum Blocktype {
-	I (new String[]{"#",
-					"#",
-					"#",
-					"#",
-					"#"}),
+	I (new int[][]{{1},{1},{1},{1}}),
 					
-	J (new String[]{" #",
-					" #",
-					" #",
-					"##"}),
+	J (new int[][]{{0,1},
+				   {0,1},
+				   {1,1}}),
 					
-	L (new String[]{"#",
-					"#",
-					"#",
-					"##"}),
+	L (new int[][]{{1,0},
+				   {1,0},
+			       {1,1}}),
 					
-	O (new String[]{"##",
-					"##"}),
+	O (new int[][]{{1,1},
+				   {1,1}}),
 					
-	S (new String[]{" ##",
-					"## "}),
+	S (new int[][]{{0,1,1},
+				   {1,1,0}}),
 					
-	T (new String[]{" # ",
-					"###"}),
+	T (new int[][]{{0,1,0},
+				   {1,1,1}}),
 					
-	Z ( new String[]{"## ",
-					 " ##"});
+	Z ( new int[][]{{1,1,0},
+					{0,1,1}});
 	
-	private String[] form;
+	private int[][] form;
 	
-	private Blocktype(String[] form) {
+	private Blocktype(int[][] form) {
 		this.form = form;
 	}
 	
@@ -50,8 +45,23 @@ public enum Blocktype {
 	 * @return
 	 * A string[] which represents the form of the block.
 	 */
-	public String[] getBasicBlock(){		
-		return form;
+	public int[][] getBasicBlock(){	
+		return createCopyOfBlock(form);
+	}
+	
+	private int[][] createCopyOfBlock(int[][] block) {
+		
+		final int height = block.length;
+		
+		int[][] copy = new int[height][];
+		
+		for (int i = 0; i < height; i++) {
+			
+			copy[i] = Arrays.copyOf(block[i], block[i].length);
+			
+		}
+		
+		return copy;
 	}
 	
 	public static Blocktype getRandomBlockType(){

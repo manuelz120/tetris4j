@@ -46,7 +46,7 @@ public class Main {
 				System.out.println("unregister native hook");
 				AnsiConsole.out.print(Ansi.ansi().eraseScreen(Erase.FORWARD));
 				AnsiConsole.systemUninstall();
-				System.out.println("unistall ansi console");
+				System.out.println("uninstall ansi console");
 				// network can be closed here
 			}
 		});

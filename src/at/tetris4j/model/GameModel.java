@@ -4,7 +4,7 @@ import java.net.InetAddress;
 
 import at.tetris4j.model.components.BoardPresentation;
 import at.tetris4j.model.components.GameBoard;
-import at.tetris4j.networking.TCPClient;
+import at.tetris4j.net.TCPClient;
 
 public class GameModel implements IModel {
 
@@ -20,12 +20,17 @@ public class GameModel implements IModel {
 	}
 	
 	@Override
+	public boolean isGameOver() {
+		return gameBoardPlayer1.isGameOver();
+	}
+	
+	@Override
 	public void updateGame() {
 		gameBoardPlayer1.updateGameBoard();
 		if(isMultiplayer){
 			tcpClient.setBoardPresentation(gameBoardPlayer1.getBoardPresentation());
 			otherBoardPresentation = tcpClient.getOtherBoardPresentation();
-		}		
+		}
 	}
 	
 	@Override
@@ -49,15 +54,15 @@ public class GameModel implements IModel {
 	}
 
 	@Override
-	public void pause() {
+	public void pauseGame() {
 	}
 
 	@Override
-	public void resume() {
+	public void resumeGame() {
 	}
 
 	@Override
-	public void stop() {
+	public void stopGame() {
 	}
 
 	@Override

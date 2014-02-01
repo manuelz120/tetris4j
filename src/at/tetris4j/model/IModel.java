@@ -6,31 +6,23 @@ import at.tetris4j.model.components.BoardPresentation;
 
 public interface IModel {
 	
+	void pauseGame();
+	void resumeGame();
+	void stopGame();
+	void startNewGame();
+	boolean isGameOver();
+	
 	void updateGame();
+	BoardPresentation getGameBoard();
 	
-	public BoardPresentation getGameBoard();
+	void moveLeft();
+	void moveRight();
+	void moveDown();
+	void turn();
 	
-	public void moveLeft();
 	
-	public void moveRight();
-	
-	public void moveDown();
-	
-	public void turn();
-	
-	public void pause();
-	
-	public void resume();
-	
-	public void stop();
-	
-	public void startNewGame();
-	
-	public void startNewMultiplayerGame(InetAddress ip);
-	
-	public void startNewMultiplayerGame();
-	
-	public BoardPresentation getOtherBoardPresentation();
-	
-	public boolean isConnectionEstablished();
+	void startNewMultiplayerGame(InetAddress ip);
+	void startNewMultiplayerGame();
+	BoardPresentation getOtherBoardPresentation();
+	boolean isConnectionEstablished();
 }

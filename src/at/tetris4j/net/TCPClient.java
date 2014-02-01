@@ -1,4 +1,4 @@
-package at.tetris4j.networking;
+package at.tetris4j.net;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -4,15 +4,15 @@ import java.net.InetAddress;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.jnativehook.GlobalScreen;
-
 import at.tetris4j.model.IModel;
 import at.tetris4j.view.IView;
 import at.tetris4j.view.TetrisView;
 
 public class GameController implements IController{
 
-	private static final int REFRESH_RATE = 100;
+	private static final int REFRESH_TIME = 100;
+	
+	private static final int DEFAULT_STEP_TIME = 500;
 	
 	private final IModel model;
 	private final IView view;
@@ -20,6 +20,7 @@ public class GameController implements IController{
 	private boolean gameRunning;
 	
 	public GameController(IModel model) {
+		
 		this.model = model;
 		
 		this.view = new TetrisView(this);
@@ -35,12 +36,12 @@ public class GameController implements IController{
 	}
 	
 	@Override
-	public void leftPressed() {
+	public void moveLeft() {
 		model.moveLeft();
 	}
 
 	@Override
-	public void rightPressed() {
+	public void moveRight() {
 		model.moveRight();		
 	}
 
@@ -55,93 +56,32 @@ public class GameController implements IController{
 	}
 
 	@Override
-	public void stopPressed() {
+	public void stopGame() {
 		this.gameRunning = false;
-		GlobalScreen.unregisterNativeHook();
+		view.showGoodbyeScreen();
 	}
 	
 	@Override
-	public void pausePressed() {
-		// TODO Auto-generated method stub
-		
+	public void pauseGame() {
+		//TODO implement pause
 	}
 
 	@Override
-	public void resumePressed() {
-		// TODO Auto-generated method stub
-		
+	public void resumeGame() {
+		//TODO implement resume
 	}
 
+	@Override
+	public void startSinglePlayerMode() {
+
+		new Thread(new GameLoop()).start();
+		
+		new Thread(new RenderLoop()).start();
+	}
 	
-
-	@Override
-	public void wPressed() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void aPressed() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void sPressed() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void dPressed() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void singleplayerPressed() {
-		startSingleplayerMode();
-	}
-
 	@Override
 	public void multiplayerPressed() {
 		view.showNetworkInfoScreen();
-	}
-
-	@Override
-	public void startSingleplayerMode() {
-		final Timer updateTimer = new Timer();
-		updateTimer.scheduleAtFixedRate(new TimerTask() {
-			@Override
-			public void run() {
-				model.updateGame();
-				
-				if (!gameRunning) {
-					//TODO cancel is not working correctly
-					updateTimer.cancel();
-				}
-			}
-		}, REFRESH_RATE, REFRESH_RATE);
-		
-		
-		new Thread(new Runnable() {
-			//TODO extract the thread out of this method
-			@Override
-			public void run() {
-				
-				while (gameRunning) {
-					
-					view.updateScreen(model);
-					
-					try {
-						Thread.sleep(REFRESH_RATE);
-					} catch (InterruptedException e) {
-						gameRunning = false;
-					}
-				}
-			}
-			
-		}).start();
 	}
 	
 	private void showMultiplayerScreen() {
@@ -151,35 +91,20 @@ public class GameController implements IController{
 			public void run() {
 				if(model.isConnectionEstablished()){
 					model.updateGame();
-				}
-				if (!gameRunning) {
-					//TODO cancel is not working correctly
-					updateTimer.cancel();
-				}
-			}
-		}, REFRESH_RATE, REFRESH_RATE);
-		
-		
-		new Thread(new Runnable() {
-			//TODO extract the thread out of this method
-			@Override
-			public void run() {
-				
-				while (gameRunning) {
-					if(model.isConnectionEstablished()){
-						view.updateScreen(model);
-					}
 					
-					
-					try {
-						Thread.sleep(REFRESH_RATE);
-					} catch (InterruptedException e) {
+					if (model.isGameOver()) {
+						view.showGoodbyeScreen();
 						gameRunning = false;
 					}
 				}
+				if (!gameRunning) {
+					updateTimer.cancel();
+				}
 			}
-			
-		}).start();
+		}, DEFAULT_STEP_TIME, DEFAULT_STEP_TIME);
+		
+		
+		new Thread(new RenderLoop()).start();
 	}
 
 	@Override
@@ -192,5 +117,48 @@ public class GameController implements IController{
 	public void startMultiplayerMode() {
 		model.startNewMultiplayerGame();
 		showMultiplayerScreen();
+	}
+	
+	private class GameLoop implements Runnable {
+		
+		@Override
+		public void run() {
+			
+			while (gameRunning) {
+				
+				model.updateGame();
+
+				if (model.isGameOver()) {
+					view.showGameOverScreen();
+					gameRunning = false;
+				}
+				
+				try {
+					Thread.sleep(DEFAULT_STEP_TIME);
+				} catch (InterruptedException e) {
+					gameRunning = false;
+				}
+				
+			}
+		}
+	}
+	
+	private class RenderLoop implements Runnable {
+		
+		@Override
+		public void run() {
+			
+			while (gameRunning) {
+				
+				view.updateScreen(model);
+				
+				try {
+					Thread.sleep(REFRESH_TIME);
+				} catch (InterruptedException e) {
+					gameRunning = false;
+				}
+				
+			}
+		}
 	}
 }
