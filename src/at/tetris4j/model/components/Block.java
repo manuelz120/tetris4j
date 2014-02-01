@@ -24,8 +24,9 @@ public class Block {
 		TetrisColor color = blocktype.getColor();
 		int rgb = color.getRGB();
 		int[][] template = blocktype.getBasicBlock();
-		
-		x = calculateStartPosition(width);
+		int normalizedWidth = width - template[0].length + 1;
+
+		x = calculateStartPosition(normalizedWidth);
 		
 		block = createBlock(template, rgb);
 		

@@ -144,19 +144,21 @@ public class TetrisView implements IConsoleView {
 	}
 
 	@Override
+	public void clear() {
+		
+		AnsiConsole.out.print(Ansi.ansi().eraseScreen());
+		
+	}
+	
+	@Override
 	public void updateScreen(IModel model) {
-		if (gameState == GameState.SinglePlayer) {
-			AnsiConsole.out.print(Ansi.ansi().cursor(0, 0));
+		AnsiConsole.out.print(Ansi.ansi().cursor(0, 0));
+		
+		BoardPresentation boardPresentation = model.getGameBoard();
 
-			BoardPresentation boardPresentation = model.getGameBoard();
-
-			printGameBoardPresentation(boardPresentation);
+		printGameBoardPresentation(boardPresentation);
 			
-		} else if (gameState == GameState.Multiplayer) {
-			AnsiConsole.out.print(Ansi.ansi().cursor(0, 0));
-			AnsiConsole.out.print(Ansi.ansi().eraseScreen());
-			BoardPresentation player1BoardPresentation = model.getGameBoard();
-			AnsiConsole.out.print(player1BoardPresentation.getOutput());
+		if (gameState == GameState.Multiplayer) {
 			AnsiConsole.out.print(Ansi.ansi().cursor(0, 50));
 			BoardPresentation player2BoardPresentation = model.getOtherBoardPresentation();
 			if(player2BoardPresentation != null)
@@ -250,6 +252,7 @@ public class TetrisView implements IConsoleView {
 	public void showGoodbyeScreen() {
 		AnsiConsole.out.print(Ansi.ansi().cursor(0, 0));
 		AnsiConsole.out.print(Ansi.ansi().eraseScreen());
+		
 		
 		String[] goodbyeString = Utils.readLines("/goodbye.txt");
 		for (String s : goodbyeString) {

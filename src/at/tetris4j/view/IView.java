@@ -9,6 +9,8 @@ public interface IView {
 	
 	void showStartScreen();
 	
+	void clear();
+	
 	void showNetworkInfoScreen();
 	
 	void showGameOverScreen();

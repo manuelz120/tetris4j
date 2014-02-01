@@ -9,48 +9,48 @@ import at.tetris4j.net.TCPClient;
 public class GameModel implements IModel {
 
 	private static final int _HEIGHT = 20;
-	private GameBoard gameBoardPlayer1;
+	private GameBoard gameBoardPlayer;
 	private BoardPresentation otherBoardPresentation;
 	private boolean isMultiplayer;
 	private TCPClient tcpClient;
 
 	public GameModel(){
-		this.gameBoardPlayer1 = new GameBoard(20);
+		this.gameBoardPlayer = new GameBoard(20);
 		otherBoardPresentation = new BoardPresentation("");
 	}
 	
 	@Override
 	public boolean isGameOver() {
-		return gameBoardPlayer1.isGameOver();
+		return gameBoardPlayer.isGameOver();
 	}
 	
 	@Override
 	public void updateGame() {
-		gameBoardPlayer1.updateGameBoard();
+		gameBoardPlayer.updateGameBoard();
 		if(isMultiplayer){
-			tcpClient.setBoardPresentation(gameBoardPlayer1.getBoardPresentation());
+			tcpClient.setBoardPresentation(gameBoardPlayer.getBoardPresentation());
 			otherBoardPresentation = tcpClient.getOtherBoardPresentation();
 		}
 	}
 	
 	@Override
 	public BoardPresentation getGameBoard() {
-		return this.gameBoardPlayer1.getBoardPresentation();
+		return this.gameBoardPlayer.getBoardPresentation();
 	}
 
 	@Override
 	public void moveLeft() {
-		gameBoardPlayer1.moveLeft();
+		gameBoardPlayer.moveLeft();
 	}
 
 	@Override
 	public void moveRight() {
-		gameBoardPlayer1.moveRight();
+		gameBoardPlayer.moveRight();
 	}
 
 	@Override
 	public void turn() {
-		gameBoardPlayer1.turnCurrentBlock();
+		gameBoardPlayer.turnCurrentBlock();
 	}
 
 	@Override
@@ -67,12 +67,12 @@ public class GameModel implements IModel {
 
 	@Override
 	public void moveDown() {
-		gameBoardPlayer1.moveDown();
+		gameBoardPlayer.moveDown();
 	}
 
 	@Override
 	public void startNewGame() {
-		this.gameBoardPlayer1 = new GameBoard(_HEIGHT);		
+		this.gameBoardPlayer = new GameBoard(_HEIGHT);		
 	}
 
 	@Override
@@ -85,7 +85,7 @@ public class GameModel implements IModel {
 		startNewGame();
 		isMultiplayer = true;
 		tcpClient = new TCPClient(ip);
-		tcpClient.setBoardPresentation(gameBoardPlayer1.getBoardPresentation());
+		tcpClient.setBoardPresentation(gameBoardPlayer.getBoardPresentation());
 	}
 
 	@Override
@@ -93,7 +93,7 @@ public class GameModel implements IModel {
 		startNewGame();
 		isMultiplayer = true;
 		tcpClient = new TCPClient();
-		tcpClient.setBoardPresentation(gameBoardPlayer1.getBoardPresentation());
+		tcpClient.setBoardPresentation(gameBoardPlayer.getBoardPresentation());
 	}
 
 	@Override

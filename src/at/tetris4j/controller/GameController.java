@@ -84,7 +84,10 @@ public class GameController implements IController{
 		view.showNetworkInfoScreen();
 	}
 	
-	private void showMultiplayerScreen() {
+	private void startMultiplayer() {
+
+		view.clear();
+		
 		final Timer updateTimer = new Timer();
 		updateTimer.scheduleAtFixedRate(new TimerTask() {
 			@Override
@@ -105,18 +108,20 @@ public class GameController implements IController{
 		
 		
 		new Thread(new RenderLoop()).start();
+		
+		
 	}
 
 	@Override
 	public void startMultiplayerMode(InetAddress ip) {
 		model.startNewMultiplayerGame(ip);
-		showMultiplayerScreen();
+		startMultiplayer();
 	}
 
 	@Override
 	public void startMultiplayerMode() {
 		model.startNewMultiplayerGame();
-		showMultiplayerScreen();
+		startMultiplayer();
 	}
 	
 	private class GameLoop implements Runnable {
