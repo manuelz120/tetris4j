@@ -1,7 +1,8 @@
 package at.tetris4j.model.components;
 
-import java.awt.Color;
 import java.util.Random;
+
+import at.tetris4j.commons.TetrisColor;
 
 /**
  * A Class representing a Tetris-Block.
@@ -18,8 +19,9 @@ public class Block {
 	/**
 	 * Initializes a random tetris-block.
 	 */
-	private Block(Blocktype blocktype, Color color, int width){
+	private Block(Blocktype blocktype, int width){
 		
+		TetrisColor color = blocktype.getColor();
 		int rgb = color.getRGB();
 		int[][] template = blocktype.getBasicBlock();
 		
@@ -33,9 +35,7 @@ public class Block {
 		
 		Blocktype blocktype = Blocktype.getRandomBlockType();
 		
-		Color color = Color.RED;
-		
-		Block block = new Block(blocktype, color, width);
+		Block block = new Block(blocktype, width);
 		
 		return block;
 		

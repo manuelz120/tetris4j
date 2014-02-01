@@ -3,38 +3,42 @@ package at.tetris4j.model.components;
 import java.util.Arrays;
 import java.util.Random;
 
+import at.tetris4j.commons.TetrisColor;
+
 /**
  * Enum to define the different forms of Tetris-Blocks.
  * @author Manuel Zametter
  *
  */
 public enum Blocktype {
-	I (new int[][]{{1},{1},{1},{1}}),
+	I (new int[][]{{1},{1},{1},{1}}, TetrisColor.CYAN),
 					
 	J (new int[][]{{0,1},
 				   {0,1},
-				   {1,1}}),
+				   {1,1}}, TetrisColor.BLUE),
 					
 	L (new int[][]{{1,0},
 				   {1,0},
-			       {1,1}}),
+			       {1,1}}, TetrisColor.YELLOW),
 					
 	O (new int[][]{{1,1},
-				   {1,1}}),
+				   {1,1}}, TetrisColor.WHITE),
 					
 	S (new int[][]{{0,1,1},
-				   {1,1,0}}),
+				   {1,1,0}}, TetrisColor.GREEN),
 					
 	T (new int[][]{{0,1,0},
-				   {1,1,1}}),
+				   {1,1,1}}, TetrisColor.MAGENTA),
 					
 	Z ( new int[][]{{1,1,0},
-					{0,1,1}});
+					{0,1,1}}, TetrisColor.RED);
 	
 	private int[][] form;
+	private TetrisColor color;
 	
-	private Blocktype(int[][] form) {
+	private Blocktype(int[][] form, TetrisColor color) {
 		this.form = form;
+		this.color = color;
 	}
 	
 	private static Random random = new Random();
@@ -47,6 +51,10 @@ public enum Blocktype {
 	 */
 	public int[][] getBasicBlock(){	
 		return createCopyOfBlock(form);
+	}
+	
+	public TetrisColor getColor(){	
+		return color;
 	}
 	
 	private int[][] createCopyOfBlock(int[][] block) {

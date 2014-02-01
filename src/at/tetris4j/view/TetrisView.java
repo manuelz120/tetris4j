@@ -10,6 +10,7 @@ import org.fusesource.jansi.AnsiConsole;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
 
+import at.tetris4j.commons.TetrisColor;
 import at.tetris4j.controller.IController;
 import at.tetris4j.helpers.Utils;
 import at.tetris4j.model.IModel;
@@ -19,6 +20,14 @@ import at.tetris4j.view.utils.GlobalKeyListener;
 import at.tetris4j.view.utils.TetrisKey;
 
 public class TetrisView implements IConsoleView {
+
+	private static final char SPACE_CHARACTER = ' ';
+
+	private static final char LINE_CHARACTER = '-';
+
+	private static final char WALL_CHARACTER = '|';
+
+	private static final char BLOCK_CHARACTER = '#';
 
 	private static final String IP_PATTERN = "^([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
 											+ "([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\."
@@ -141,7 +150,8 @@ public class TetrisView implements IConsoleView {
 
 			BoardPresentation boardPresentation = model.getGameBoard();
 
-			AnsiConsole.out.print(boardPresentation.getOutput());
+			printGameBoardPresentation(boardPresentation);
+			
 		} else if (gameState == GameState.Multiplayer) {
 			AnsiConsole.out.print(Ansi.ansi().cursor(0, 0));
 			AnsiConsole.out.print(Ansi.ansi().eraseScreen());
@@ -154,6 +164,64 @@ public class TetrisView implements IConsoleView {
 		}
 	}
 
+	private void printGameBoardPresentation(BoardPresentation boardPresentation) {
+		
+		final int[][] board = boardPresentation.getPresentation();
+		final int height = board.length;
+		final int width = board[0].length;
+		
+		for (int i = 0; i <= width + 1; i++) {
+			AnsiConsole.out.print(LINE_CHARACTER);
+		}
+		AnsiConsole.out.println();
+		
+		for (int y = 0; y < height; y++) {
+			AnsiConsole.out.print(WALL_CHARACTER);
+			for (int x = 0; x < width; x++) {
+				int val = board[y][x];
+				if (val != 0) {
+					Color color = mapColorToValue(val);
+					AnsiConsole.out.print(Ansi.ansi().fg(color).a(BLOCK_CHARACTER).reset());
+				} else {
+					AnsiConsole.out.print(SPACE_CHARACTER);
+				}
+				
+			}
+			AnsiConsole.out.println(WALL_CHARACTER);
+		}
+		
+		for (int i = 0; i <= width + 1; i++) {
+			AnsiConsole.out.print(LINE_CHARACTER);
+		}
+		AnsiConsole.out.println();
+	
+	}
+	
+	private Color mapColorToValue(int rgbVal) {
+		
+		TetrisColor tetrisColor = TetrisColor.getColorByRgb(rgbVal);
+		
+		switch (tetrisColor) {
+		case RED:
+			return Color.RED;
+		case BLUE:
+			return Color.BLUE;
+		case CYAN:
+			return Color.CYAN;
+		case GREEN:
+			return Color.GREEN;
+		case MAGENTA:
+			return Color.MAGENTA;
+		case WHITE:
+			return Color.WHITE;
+		case YELLOW:
+			return Color.YELLOW;
+		default:
+			return Color.DEFAULT;
+		}
+		
+	}
+	
 	@Override
 	public void showNetworkInfoScreen() {
 		gameState = GameState.NetworkInput;

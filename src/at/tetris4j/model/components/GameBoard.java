@@ -18,7 +18,7 @@ public class GameBoard {
 	
 	private int width;
 	private int height;
-	private int[][] myBoard;
+	private int[][] gameBoard;
 	private Block currentBlock;
 	private BoardPresentation boardPresentation;
 
@@ -26,7 +26,7 @@ public class GameBoard {
 		this.height = theHeight;
 		this.width = DEFAULT_WIDTH;
 		currentBlock = Block.getRandomBlock(width);
-		myBoard = new int[height][width];
+		gameBoard = new int[height][width];
 		updateBoardPresentation();
 	}
 
@@ -44,7 +44,7 @@ public class GameBoard {
 		
 		for (int j = 0; j < blockWidth; j++) {
 			for (int i = 0; i < blockHeight; i++) {
-				if (block[i][j] != 0 && myBoard[i + currentY][j + currentX - 1] != 0) {
+				if (block[i][j] != 0 && gameBoard[i + currentY][j + currentX - 1] != 0) {
 					return false;
 				}
 			}
@@ -67,7 +67,7 @@ public class GameBoard {
 		
 		for (int j = blockWidth - 1; j >= 0; j--) {
 			for (int i = 0; i < blockHeight; i++) {
-				if (block[i][j] != 0 && myBoard[i + currentY][j + currentX + 1] != 0) {
+				if (block[i][j] != 0 && gameBoard[i + currentY][j + currentX + 1] != 0) {
 					return false;
 				}
 			}
@@ -140,7 +140,7 @@ public class GameBoard {
 				
 				for (int j = currentX, n = blockHeight - 1; j <  blockHeight + currentX; j++, n--) {
 					
-					if (block[n][l] != 0 && myBoard[i][j] != 0) {
+					if (block[n][l] != 0 && gameBoard[i][j] != 0) {
 						
 						return false;
 					}
@@ -179,7 +179,7 @@ public class GameBoard {
 			
 			for (int j = 0; j < blockWidth; j++) {
 				
-				if (myBlock[i][j] != 0 && myBoard[i + currentY + 1][j + currentX] != 0) {
+				if (myBlock[i][j] != 0 && gameBoard[i + currentY + 1][j + currentX] != 0) {
 					
 					return true;
 				}
@@ -190,7 +190,7 @@ public class GameBoard {
 	
 	private void retireCurrentBlock() {
 
-		insertBlockIntoBoard(currentBlock, myBoard);
+		insertBlockIntoBoard(currentBlock, gameBoard);
 		
 		currentBlock = Block.getRandomBlock(width);
 		
@@ -205,7 +205,7 @@ public class GameBoard {
 			boolean rowFinished = true;
 			for (int j = 0; j < width; j++) {
 				
-				if (myBoard[i][j] == 0) {
+				if (gameBoard[i][j] == 0) {
 					rowFinished = false;
 					break;
 				}
@@ -223,21 +223,21 @@ public class GameBoard {
 		
 		Arrays.fill(newBoard[0], 0);
 		for (int i = 1; i <= rowIndex; i++) {
-			newBoard[i] = myBoard[i - 1];
+			newBoard[i] = gameBoard[i - 1];
 		}
 		
 		for (int i = rowIndex + 1; i < height; i++) {
-			newBoard[i] = myBoard[i];
+			newBoard[i] = gameBoard[i];
 		}
 		
-		myBoard = newBoard;
+		gameBoard = newBoard;
 	}
 	
 	private void checkForGameOver() {
 		
-		for (int i = 0; i < myBoard[0].length; i++) {
+		for (int i = 0; i < gameBoard[0].length; i++) {
 			
-			if (myBoard[0][i] != 0) {
+			if (gameBoard[0][i] != 0) {
 				isGameOver = true;
 			}
 		}
@@ -248,45 +248,13 @@ public class GameBoard {
 		
 		updateGame();
 		
-		int[][] workingCopyOfBoard = createCopyOfBoard(myBoard);
+		int[][] workingCopyOfBoard = createCopyOfBoard(gameBoard);
 		
 		insertBlockIntoBoard(currentBlock, workingCopyOfBoard);
 		
-		this.boardPresentation = createBoardPresentation(workingCopyOfBoard);
-//		System.out.println(boardPresentation.getOutput());
+		this.boardPresentation = new BoardPresentation(workingCopyOfBoard);
 	}
 
-
-	private BoardPresentation createBoardPresentation(int[][] workingCopyOfBoard) {
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i <= width + 1; i++) {
-			sb.append('-');
-		}
-		sb.append('\n');
-		for (int y = 0; y < height; y++) {
-			sb.append('|');
-			for (int x = 0; x < width; x++) {
-				int val = workingCopyOfBoard[y][x];
-				if (val != 0) {
-					sb.append('#');
-				} else {
-					sb.append(' ');
-				}
-				
-			}
-			sb.append('|');
-			sb.append('\n');
-		}
-		
-		for (int i = 0; i <= width + 1; i++) {
-			sb.append('-');
-		}
-		sb.append('\n');
-		
-		BoardPresentation boardPresentation = new BoardPresentation(sb.toString());
-		return boardPresentation;
-	}
-	
 	private int[][] createCopyOfBoard(int[][] board) {
 		int[][] copyBoard = new int[height][width];
 		
