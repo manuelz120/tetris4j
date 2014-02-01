@@ -7,11 +7,20 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.qos.logback.classic.pattern.Util;
-
-public class Utils {
+/**
+ * 
+ * @author Manuel Zametter
+ *
+ */
+public final class Utils {
+	
+	/**
+	 * Private constructor to prevent instantiation.
+	 */
+	private Utils() {}
+	
 	public static String[] readLines(String file) {
-		InputStream in = Util.class.getClass().getResourceAsStream(file);
+		InputStream in = Utils.class.getClass().getResourceAsStream(file);
 		BufferedReader input = new BufferedReader(new InputStreamReader(in));
 		List<String> lines = new ArrayList<String>();
 		try {
