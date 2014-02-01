@@ -8,6 +8,7 @@ import at.tetris4j.view.utils.TetrisKey;
  * Class representing a simple Tetris-GameBoard.
  * 
  * @author Manuel Zametter
+ * @author Florian Genser
  * 
  */
 public class GameBoard {
@@ -18,10 +19,11 @@ public class GameBoard {
 	
 	private int width;
 	private int height;
-	private int[][] gameBoard;
 	private Block currentBlock;
 	private BoardPresentation boardPresentation;
 
+	private int[][] gameBoard;
+	
 	public GameBoard(int theHeight) {
 		this.height = theHeight;
 		this.width = DEFAULT_WIDTH;
@@ -170,7 +172,7 @@ public class GameBoard {
 		int blockWidth = myBlock[0].length;
 		
 		// checks if block is at bottom
-		if (currentY + blockHeight == height) {
+		if (currentY + blockHeight >= height) {
 			
 			return true;
 		}
