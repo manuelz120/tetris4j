@@ -1,6 +1,8 @@
 package at.tetris4j.core;
 
+import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
+import org.fusesource.jansi.Ansi.Erase;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
 
@@ -42,6 +44,7 @@ public class Main {
 			public void run() {
 				GlobalScreen.unregisterNativeHook();
 				System.out.println("unregister native hook");
+				AnsiConsole.out.print(Ansi.ansi().eraseScreen(Erase.FORWARD));
 				AnsiConsole.systemUninstall();
 				System.out.println("unistall ansi console");
 				// network can be closed here

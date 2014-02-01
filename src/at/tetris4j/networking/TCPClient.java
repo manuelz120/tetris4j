@@ -56,9 +56,7 @@ public class TCPClient implements Runnable {
 		connectionEstablished = true;
 		
 		while (isRunning) {
-			out.print(boardPresentation.toString());
-			out.flush();
-			// reading the response using input stream
+			out.println(boardPresentation.getOutput());
 			StringBuilder sb = new StringBuilder();
 			try {
 				String s;
@@ -69,11 +67,8 @@ public class TCPClient implements Runnable {
 				System.out.println(e.getMessage());
 				System.out.println("Failed to read inputStream!");
 			}
-			otherBoardPresentation = new BoardPresentation(sb.toString());
-			try {
-				Thread.sleep(300);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+			if(sb.toString() != ""){
+				otherBoardPresentation = new BoardPresentation(sb.toString());
 			}
 		}
 	}
